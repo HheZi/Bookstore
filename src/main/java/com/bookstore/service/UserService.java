@@ -22,6 +22,7 @@ public class UserService implements UserDetailsService{
 	private UserRepository userRepository;
 
 	
+	@Transactional(readOnly = true)
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return userRepository.findByUsername(username)
@@ -39,6 +40,7 @@ public class UserService implements UserDetailsService{
 	}
 	
 	
+	@Transactional(readOnly = true)
 	public Optional<User> findByUsername(String username) {
 		return userRepository.findByUsername(username);
 	}

@@ -44,6 +44,9 @@ public class User extends BaseAudit{
 	@Column(length = 60)
 	private String password;
 	
+	@Column(length = 64)
+	private String avatar;
+	
 	@Enumerated(EnumType.STRING)
 	private Role role = Role.USER;
 

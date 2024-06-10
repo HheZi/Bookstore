@@ -4,15 +4,22 @@ body {
 }
 
 /* config of all books */
+
+.containerOfbooks{
+	margin-left: 80px;
+	margin-right: 80px;
+}
+
 .book-block {
     width: 300px;
     height: 400px;
     border: 1px solid #ccc;
     border-radius: 10px;
     overflow: hidden;
-    margin: 10px;
+    margin: 20px;
+    margin-top: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: inline-block;
+    display: inline-flex;
     flex-direction: column;
     background-color: #fff;
 }
@@ -40,6 +47,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
 }
 
 .book-info h2 {
@@ -69,4 +77,8 @@ body {
 
 .book-info button:hover {
     background-color: #45a049;
+}
+
+.bookId {
+    display: none;
 }

@@ -8,17 +8,23 @@
 	<header id="header">
         <div class="logo">
             <a href="/">
-                <img src="logo.png" alt="Bookstore log">
+                <img src="logo.png" alt="Bookstore logo">
             </a>
         </div>
-        <nav>
-            <ul>
-                <li><a href="#cart">Cart</a></li>
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#contact">Contacts</a></li>
-                <li><a href="/logout">Log Out</a></li>
-            </ul>
-        </nav>
-    </header>	
+        <div class="user-menu">
+            <div class="avatar" onclick="toggleDropdown()">
+                <img src="" alt="Avatar">
+                <span>Username</span>
+            </div>
+            <div class="dropdown" id="dropdown">
+           	 	<a href="#cart">My Profile</a>
+                <a href="#mybooks">My Books</a>
+                <a href="/addBook">Add Book</a>
+                <a href="#cart">Cart</a>
+                <hr class="line">
+                <a href="/logout">Log Out</a>
+            </div>
+        </div>
+    </header>
 </body>
 </html>
