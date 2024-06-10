@@ -18,6 +18,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,6 +33,7 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Book extends BaseAudit{
 	
 	@Id
@@ -39,14 +41,18 @@ public class Book extends BaseAudit{
 	@EqualsAndHashCode.Exclude
 	private Long id;
 	
-	private String name;
+	@Column(length = 30)
+	private String title;
 	
+	@Column(length = 45)
 	private String author;
 	
+	@Column(length = 20)
 	@Enumerated(EnumType.STRING)
 	private Genre genre;
 	
 	@Enumerated(EnumType.STRING)
+	@Column(length = 2)
 	private Language language;
 	
 	@Column(name = "numbers_of_pages")
@@ -54,12 +60,16 @@ public class Book extends BaseAudit{
 	
 	private Float price;
 	
+	@Column(length = 360)
 	private String description;
 	
 	@Column(name = "date_of_publishing")
 	private LocalDate dateOfPublishing;
 	
+	@Column(length = 64)
+	private String cover;
+	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, 
-			cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+			cascade = {CascadeType.MERGE})
 	private User user;
 }

@@ -3,60 +3,6 @@ body {
     font-family: Arial, sans-serif;
 }
 
-/* config header */
-header {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    margin-left: 20px;
-}
-
-.logo img {
-    width: 50px;
-    height: 50px;
-    margin-right: 10px;
-}
-
-.logo a{
-    text-decoration: none;
-    color: white;
-}
-
-.logo h1 {
-    font-size: 24px;
-    margin: 0;
-}
-
-nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-}
-
-nav ul li {
-    margin-right: 20px;
-}
-
-nav ul li a {
-    text-decoration: none;
-    color: white;
-    font-size: 18px;
-}
-
-nav ul li a:hover, .logo a:hover {
-    text-decoration: underline;
-}
-
 /* config of all books */
 .book-block {
     width: 300px;

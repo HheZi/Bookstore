@@ -3,21 +3,49 @@ package com.bookstore.mapper;
 import org.springframework.stereotype.Component;
 
 import com.bookstore.entity.Book;
-import com.bookstore.entity.dto.BookDTO;
+import com.bookstore.entity.projection.BookReadDTO;
+import com.bookstore.entity.projection.BookWriteDTO;
 
 @Component
 public class BookMapper {
 	
-	public Book bookDtoToBook(BookDTO dto) {
-		return new Book(null, dto.getName(), dto.getAuthor(), dto.getGenre(), dto.getLanguage(),
-				dto.getNumbersOfPages(), dto.getPrice(), 
-				dto.getDescription(), dto.getDateOfPublishing(), dto.getUser());
+	public Book bookDtoToBook(BookWriteDTO dto) {
+		return Book.builder()
+				.title(dto.getTitle())
+				.author(dto.getAuthor())
+				.genre(dto.getGenre())
+				.dateOfPublishing(dto.getDateOfPublishing())
+				.description(dto.getDescription())
+				.user(dto.getUser())
+				.language(dto.getLanguage())
+				.numbersOfPages(dto.getNumbersOfPages())
+				.price(dto.getPrice())
+				.cover(dto.getCover().getOriginalFilename())
+				.build();
 	}
 	
 	
-	public BookDTO bookToBookDto(Book book) {
-		return new BookDTO(book.getName(), book.getAuthor(), book.getGenre(), book.getLanguage(), 
-				book.getNumbersOfPages(), book.getPrice(), 
-				book.getDescription(), book.getDateOfPublishing(), book.getUser());
+	public BookWriteDTO bookToBookDto(Book book) {
+		return BookWriteDTO.builder()
+				.title(book.getTitle())
+				.author(book.getAuthor())
+				.genre(book.getGenre())
+				.dateOfPublishing(book.getDateOfPublishing())
+				.description(book.getDescription())
+				.user(book.getUser())
+				.language(book.getLanguage())
+				.numbersOfPages(book.getNumbersOfPages())
+				.price(book.getPrice())
+				.build();
+	}
+	
+	public BookReadDTO bookToBookReadDTO(Book book) {
+		return BookReadDTO.builder()
+				.id(book.getId())
+				.title(book.getTitle())
+				.author(book.getAuthor())
+				.price(book.getPrice())
+				.coverUrl("books/%d/cover".formatted(book.getId()))
+				.build();
 	}
 }

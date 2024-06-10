@@ -1,5 +1,7 @@
 package com.bookstore.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,13 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bookstore.entity.User;
 import com.bookstore.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
 public class UserService implements UserDetailsService{
 	
 	@Autowired
 	private UserRepository userRepository;
 
-	@Transactional(readOnly = true)
+	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return userRepository.findByUsername(username)
@@ -34,4 +38,8 @@ public class UserService implements UserDetailsService{
 		userRepository.save(user);
 	}
 	
+	
+	public Optional<User> findByUsername(String username) {
+		return userRepository.findByUsername(username);
+	}
 }

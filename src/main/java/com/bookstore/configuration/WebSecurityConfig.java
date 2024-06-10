@@ -4,7 +4,6 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,13 +19,14 @@ public class WebSecurityConfig {
 		httpSecurity
 			.csrf(csfr -> csfr.disable())
 			.authorizeHttpRequests(auth -> auth
-					.requestMatchers("/login", "/registration", "/styles/**", "/images/logo.png").permitAll()
+					.requestMatchers("/login", "/registration", 
+							"/scripts/**", "/styles/**").permitAll()
 					.requestMatchers("/home").authenticated()
 					.anyRequest().authenticated()
 				)
 			.formLogin(login -> login
 					.loginPage("/login")
-					.defaultSuccessUrl("/home")
+					.defaultSuccessUrl("/")
 				)
 			.logout(withDefaults());
 		return httpSecurity.build();
@@ -36,4 +36,5 @@ public class WebSecurityConfig {
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+
 }

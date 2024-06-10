@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import com.bookstore.entity.audit.BaseAudit;
 import com.bookstore.entity.enums.Role;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -34,10 +35,13 @@ public class User extends BaseAudit{
 	@EqualsAndHashCode.Exclude
 	private Integer id;
 
+	@Column(length = 40)
 	private String email;
 	
+	@Column(length = 40)
 	private String username;
 
+	@Column(length = 60)
 	private String password;
 	
 	@Enumerated(EnumType.STRING)
