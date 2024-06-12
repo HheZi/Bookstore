@@ -4,11 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Registration Page</title>
-<link th:href="@{/styles/loginStyle.css}" rel="stylesheet">
+<link href="/styles/loginStyle.css" rel="stylesheet">
 </head>
 <body>
 	<div class="register-container">
 		<h2>Register</h2>
+		<div th:if="${param.error}">
+			<p class="error-message">Wrong input</p>
+		</div>
 		<form id="registerForm" action="/registration" method="post">
 			<div class="input-group">
 				<label for="username">Username</label> <input type="text"

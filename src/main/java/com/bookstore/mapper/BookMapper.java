@@ -1,5 +1,6 @@
 package com.bookstore.mapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.bookstore.entity.Book;
@@ -8,6 +9,9 @@ import com.bookstore.entity.projection.BookWriteDTO;
 
 @Component
 public class BookMapper {
+	
+	@Autowired
+	public UserMapper userMapper;
 	
 	public Book bookDtoToBook(BookWriteDTO dto) {
 		return Book.builder()
@@ -24,28 +28,18 @@ public class BookMapper {
 				.build();
 	}
 	
-	
-	public BookWriteDTO bookToBookDto(Book book) {
-		return BookWriteDTO.builder()
-				.title(book.getTitle())
-				.author(book.getAuthor())
-				.genre(book.getGenre())
-				.dateOfPublishing(book.getDateOfPublishing())
-				.description(book.getDescription())
-				.user(book.getUser())
-				.language(book.getLanguage())
-				.numbersOfPages(book.getNumbersOfPages())
-				.price(book.getPrice())
-				.build();
-	}
-	
-	public BookReadDTO bookToBookReadDTO(Book book) {
+	public BookReadDTO bookToBookReadDTO(Book book, boolean optional) {
 		return BookReadDTO.builder()
 				.id(book.getId())
 				.title(book.getTitle())
 				.author(book.getAuthor())
 				.price(book.getPrice())
-				.coverUrl("books/%d/cover".formatted(book.getId()))
+				.description(book.getDescription())
+				.genre(book.getGenre())
+				.language(book.getLanguage())
+				.numbersOfPages(book.getNumbersOfPages())
+				.user(optional ? userMapper.userToUserReadDto(book.getUser()) : null)
+				.coverUrl("/books/%d/cover".formatted(book.getId()))
 				.build();
 	}
 }

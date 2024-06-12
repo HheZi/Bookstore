@@ -71,5 +71,5 @@ public class Book extends BaseAudit{
 	
 	@ManyToOne(fetch = FetchType.LAZY, optional = false, 
 			cascade = {CascadeType.MERGE})
-	private User user;
+	private UserEntity user;
 }

@@ -1,6 +1,7 @@
 package com.bookstore.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,6 +35,11 @@ public class BookService {
 		return bookRepository.findAll();
 	}
 	
+	@Transactional(readOnly = true)
+	public Optional<Book> findById(Long id) {
+		return bookRepository.findById(id);
+	}
+	
 	@Transactional
 	public void saveBook(Book book) {
 		bookRepository.save(book);
@@ -41,8 +47,8 @@ public class BookService {
 	
 	@Transactional(readOnly = true)
 	public byte[] getCover(Long id) {
-		String image = bookRepository.findById(id)
-				 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).getCover();
+		String image = bookRepository.getReferenceById(id).getCover();
+				
 		return imageService.getImage(pathToCovers, image, defaultCover);
 	}
 	
