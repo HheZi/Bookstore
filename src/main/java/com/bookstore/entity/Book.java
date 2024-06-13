@@ -3,6 +3,7 @@ package com.bookstore.entity;
 import java.time.LocalDate;
 
 import com.bookstore.entity.audit.BaseAudit;
+import com.bookstore.entity.audit.BookAudit;
 import com.bookstore.entity.enums.Genre;
 import com.bookstore.entity.enums.Language;
 
@@ -34,7 +35,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Book extends BaseAudit{
+public class Book extends BookAudit{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,8 +69,4 @@ public class Book extends BaseAudit{
 	
 	@Column(length = 64)
 	private String cover;
-	
-	@ManyToOne(fetch = FetchType.LAZY, optional = false, 
-			cascade = {CascadeType.MERGE})
-	private UserEntity user;
 }

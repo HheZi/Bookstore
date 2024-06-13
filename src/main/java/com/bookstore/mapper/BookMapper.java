@@ -20,7 +20,6 @@ public class BookMapper {
 				.genre(dto.getGenre())
 				.dateOfPublishing(dto.getDateOfPublishing())
 				.description(dto.getDescription())
-				.user(dto.getUser())
 				.language(dto.getLanguage())
 				.numbersOfPages(dto.getNumbersOfPages())
 				.price(dto.getPrice())
@@ -28,7 +27,7 @@ public class BookMapper {
 				.build();
 	}
 	
-	public BookReadDTO bookToBookReadDTO(Book book, boolean optional) {
+	public BookReadDTO bookToBookReadDTO(Book book, boolean userOptional) {
 		return BookReadDTO.builder()
 				.id(book.getId())
 				.title(book.getTitle())
@@ -38,7 +37,8 @@ public class BookMapper {
 				.genre(book.getGenre())
 				.language(book.getLanguage())
 				.numbersOfPages(book.getNumbersOfPages())
-				.user(optional ? userMapper.userToUserReadDto(book.getUser()) : null)
+				.user(userOptional ? userMapper.userToUserReadDto(book.getUser()) : null)
+				.dateOfPublishing(book.getDateOfPublishing())
 				.coverUrl("/books/%d/cover".formatted(book.getId()))
 				.build();
 	}

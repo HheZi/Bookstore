@@ -47,7 +47,7 @@ public class BookService {
 	
 	@Transactional(readOnly = true)
 	public byte[] getCover(Long id) {
-		String image = bookRepository.getReferenceById(id).getCover();
+		String image = bookRepository.getCoverById(id);
 				
 		return imageService.getImage(pathToCovers, image, defaultCover);
 	}
