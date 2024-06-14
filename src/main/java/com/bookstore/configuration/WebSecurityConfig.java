@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.client.RestTemplate;
 
 import com.bookstore.service.UserService;
 
@@ -25,7 +26,6 @@ public class WebSecurityConfig {
 			.authorizeHttpRequests(auth -> auth
 					.requestMatchers("/login", "/registration", 
 							"/scripts/**", "/styles/**").permitAll()
-					.requestMatchers("/home").authenticated()
 					.anyRequest().authenticated()
 				)
 			.formLogin(login -> login
@@ -40,5 +40,6 @@ public class WebSecurityConfig {
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	
 
 }

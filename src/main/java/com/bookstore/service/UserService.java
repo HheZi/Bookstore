@@ -3,6 +3,7 @@ package com.bookstore.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +26,15 @@ public class UserService implements UserDetailsService{
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private ImageService imageService;
+	
+	@Value("${app.image.avatar.default:/Programming/Java//Bookstore/images/avatars/default.png}")
+	private String defaultAvatar;
+	
+	@Value("${app.image.avatar.path:/Programming/Java/Bookstore/images/avatars}")
+	private String pathToAvatars;
+	
 	@Transactional(readOnly = true)
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -32,11 +42,18 @@ public class UserService implements UserDetailsService{
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 	}
 	
+	public Optional<UserEntity> getUser(Integer id){
+		return userRepository.findById(id);
+	}
+	
 	@Transactional
 	public void saveUser(UserEntity user) {	
 		userRepository.save(user);
 	}
 	
+	public byte[] getCover(String avatar) {
+		return imageService.getImage(pathToAvatars, avatar, defaultAvatar);
+	}
 	
 	@Transactional(readOnly = true)
 	public Optional<UserEntity> findByUsername(String username) {

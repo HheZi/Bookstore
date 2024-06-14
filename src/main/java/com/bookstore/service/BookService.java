@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.bookstore.entity.Book;
+import com.bookstore.entity.UserEntity;
+import com.bookstore.entity.projection.UserReadDTO;
 import com.bookstore.repository.BookRepository;
 
 import lombok.SneakyThrows;
@@ -24,10 +27,10 @@ public class BookService {
 	@Autowired
 	private ImageService imageService;
 	
-	@Autowired
+	@Value("${app.image.cover.path:/Programming/Java//Bookstore/images/сovers}")
 	private String pathToCovers;
 	
-	@Autowired
+	@Value("${app.image.cover.default:/Programming/Java//Bookstore/images/сovers/default.png}")
 	private String defaultCover;
 	
 	@Transactional(readOnly = true)
@@ -38,6 +41,11 @@ public class BookService {
 	@Transactional(readOnly = true)
 	public Optional<Book> findById(Long id) {
 		return bookRepository.findById(id);
+	}
+	
+	@Transactional(readOnly = true)
+	public List<Book> findAllbyUser(UserReadDTO dto){ 
+		return bookRepository.findByUser(dto);
 	}
 	
 	@Transactional

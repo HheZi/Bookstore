@@ -11,7 +11,7 @@ import com.bookstore.entity.projection.BookWriteDTO;
 public class BookMapper {
 	
 	@Autowired
-	public UserMapper userMapper;
+	private UserMapper userMapper;
 	
 	public Book bookDtoToBook(BookWriteDTO dto) {
 		return Book.builder()
