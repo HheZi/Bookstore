@@ -1,16 +1,20 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head>
-	<meta charset="UTF-8">
-	<title>Home Page</title>
-	<link href="/styles/homeStyle.css" rel="stylesheet"/>
-	<link href="/styles/headerStyle.css" rel="stylesheet"/>
-	</head>
-	<body>
-		<header th:replace="~{fragments :: header}"></header>
-		<div class="containerOfbooks"></div>
-		<img alt="" src="">
-		<script src="scripts/home.js"></script>
-		<script src="scripts/header.js"></script>
-	</body>
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <link href="/styles/homeStyle.css" rel="stylesheet"/>
+    <link href="/styles/headerStyle.css" rel="stylesheet"/>
+</head>
+<body>
+    <header th:replace="~{fragments :: header}"></header>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Поиск по названию книги" />
+        <button id="searchButton">Поиск</button>
+    </div>
+    <div class="containerOfbooks"></div>
+    <div class="pagination"></div>
+    <script src="scripts/home.js"></script>
+    <script src="scripts/header.js"></script>
+</body>
 </html>

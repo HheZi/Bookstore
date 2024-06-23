@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -53,6 +55,11 @@ public class UserService implements UserDetailsService{
 	
 	public byte[] getCover(String avatar) {
 		return imageService.getImage(pathToAvatars, avatar, defaultAvatar);
+	}
+	
+	public UserEntity getAuth() {
+		return ((SecurityUserDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).getUserEntity();
 	}
 	
 	@Transactional(readOnly = true)

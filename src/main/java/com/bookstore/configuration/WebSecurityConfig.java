@@ -32,7 +32,8 @@ public class WebSecurityConfig {
 					.loginPage("/login")
 					.defaultSuccessUrl("/")
 				)
-			.logout(withDefaults());
+			.logout(withDefaults())
+			.httpBasic(withDefaults());
 		return httpSecurity.build();
 	}
 	

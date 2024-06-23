@@ -13,7 +13,7 @@ public class BookMapper {
 	@Autowired
 	private UserMapper userMapper;
 	
-	public Book bookDtoToBook(BookWriteDTO dto) {
+	public Book bookWriteDtoToBook(BookWriteDTO dto) {
 		return Book.builder()
 				.title(dto.getTitle())
 				.author(dto.getAuthor())

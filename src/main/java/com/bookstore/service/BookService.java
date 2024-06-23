@@ -5,6 +5,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,8 +36,10 @@ public class BookService {
 	private String defaultCover;
 	
 	@Transactional(readOnly = true)
-	public List<Book> getAll(){
-		return bookRepository.findAll();
+	public Page<Book> getAll(Pageable pageable, String filterName){
+	
+		return (filterName.isEmpty()) ? bookRepository.findAll(pageable) 
+				: bookRepository.findByTitleContaining(filterName, pageable);
 	}
 	
 	@Transactional(readOnly = true)
@@ -44,8 +48,8 @@ public class BookService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<Book> findAllbyUser(UserReadDTO dto){ 
-		return bookRepository.findByUser(dto);
+	public List<Book> findAllbyUser(Integer id){ 
+		return bookRepository.findByUser(id);
 	}
 	
 	@Transactional
