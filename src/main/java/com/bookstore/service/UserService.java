@@ -1,5 +1,6 @@
 package com.bookstore.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,10 @@ public class UserService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return new SecurityUserDetails(userRepository.findByUsername(username)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+	}
+	
+	public Optional<UserEntity> findAllBooksOptionalByUserId(Integer id){
+		return userRepository.findById(id);
 	}
 	
 	public Optional<UserEntity> getUser(Integer id){

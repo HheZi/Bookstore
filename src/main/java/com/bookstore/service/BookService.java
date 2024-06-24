@@ -39,7 +39,7 @@ public class BookService {
 	public Page<Book> getAll(Pageable pageable, String filterName){
 	
 		return (filterName.isEmpty()) ? bookRepository.findAll(pageable) 
-				: bookRepository.findByTitleContaining(filterName, pageable);
+				: bookRepository.findByTitleContainingIgnoreCase(filterName, pageable);
 	}
 	
 	@Transactional(readOnly = true)
@@ -68,5 +68,13 @@ public class BookService {
 	public void uploadImage(MultipartFile image) {
 		imageService.upload(pathToCovers, image.getOriginalFilename(), image.getInputStream());
 		
+	}
+	
+	@Transactional
+	public void addBookToCart(Long id, UserEntity entity){
+		Book book = findById(id)
+				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+		entity.addBookToCart(book);
+		bookRepository.save(book);
 	}
 }

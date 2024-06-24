@@ -1,6 +1,7 @@
 package com.bookstore.entity;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.bookstore.entity.audit.BaseAudit;
 import com.bookstore.entity.audit.BookAudit;
@@ -16,8 +17,10 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -25,6 +28,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.EqualsAndHashCode.Exclude;
 
 @Entity
 @Table(name = "books")
@@ -68,5 +72,20 @@ public class Book extends BookAudit{
 	private LocalDate dateOfPublishing;
 	
 	@Column(length = 64)
+	@Exclude
 	private String cover;
+	
+	@ManyToMany(mappedBy = "booksInCart", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+	@Exclude
+	@ToString.Exclude
+	@Setter(AccessLevel.NONE)
+	private List<UserEntity> usersInCart;
+	
+	public void addUserToCart(UserEntity user) {
+		usersInCart.add(user);
+	}
+	
+	public void removeUserFromCart(UserEntity user) {
+		usersInCart.remove(user);
+	}
 }

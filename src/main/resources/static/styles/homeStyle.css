@@ -1,140 +1,160 @@
 /* bookListStyle.css */
-
 body {
-    margin: 0;
-    font-family: Arial, sans-serif;
+	margin: 0;
+	font-family: Arial, sans-serif;
 }
 
 .containerOfbooks {
-    margin-left: 80px;
-    margin-right: 80px;
-    display: flex;
-    flex-wrap: wrap;
+	margin-left: 80px;
+	margin-right: 80px;
+	display: flex;
+	flex-wrap: wrap;
 }
 
 .book-block {
-    width: 300px;
-    height: 400px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    overflow: hidden;
-    margin: 20px;
-    margin-top: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    background-color: #fff;
-    align-items: center; 
+	width: 300px;
+	height: 400px;
+	border: 1px solid #ccc;
+	border-radius: 10px;
+	overflow: hidden;
+	margin: 20px;
+	margin-top: 10px;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+	display: flex;
+	flex-direction: column;
+	background-color: #fff;
+	align-items: center;
 }
 
 .book-cover {
-    width: 100%;
-    height: 60%; 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #eaeaea;
+	width: 100%;
+	height: 60%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #eaeaea;
 }
 
 .book-cover a {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
 .book-cover img {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
+	max-width: 100%;
+	max-height: 100%;
+	object-fit: contain;
 }
 
 .book-info {
-    width: 100%;
-    padding: 20px;
-    background-color: #f9f9f9;
-    text-align: center;
-    flex: 1; 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+	width: 100%;
+	padding: 20px;
+	background-color: #f9f9f9;
+	text-align: center;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 .book-info h2 {
-    font-size: 18px;
-    margin: 0 0 10px;
+	font-size: 18px;
+	margin: 0 0 10px;
 }
 
 .book-info p {
-    margin: 0 0 10px;
-    color: #555;
+	margin: 0 0 10px;
+	color: #555;
 }
 
 .book-info .price {
-    font-weight: bold;
-    color: #333;
+	font-weight: bold;
+	color: #333;
 }
 
 .book-info button {
-    padding: 10px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
+	padding: 10px;
+	background-color: #4CAF50;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	margin-top: 10px;
 }
 
 .book-info button:hover {
-    background-color: #45a049;
+	background-color: #45a049;
 }
 
 .search-container {
-    display: flex;
-    justify-content: flex-end;
-    margin: 20px;
+	display: flex;
+	justify-content: flex-end;
+	margin: 20px;
 }
 
 #searchInput {
-    padding: 8px;
-    margin-right: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+	padding: 8px;
+	margin-right: 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
 }
 
 #searchButton {
-    padding: 8px 16px;
-    background-color: #007bff;
-    border: none;
-    color: white;
-    border-radius: 4px;
-    cursor: pointer;
+	padding: 8px 16px;
+	background-color: #4CAF50;
+	border: none;
+	color: white;
+	border-radius: 4px;
+	cursor: pointer;
 }
 
 #searchButton:hover {
-    background-color: #0056b3;
+	background-color: #34c746;
 }
+
 .pagination {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+	display: flex;
+	justify-content: center;
+	margin-top: 20px;
 }
 
 .pagination-link {
-    margin: 0 5px;
-    padding: 10px 15px;
-    text-decoration: none;
-    background-color: #007bff;
-    color: white;
-    border-radius: 5px;
+	margin: 0 5px;
+	padding: 10px 15px;
+	text-decoration: none;
+	background-color: #4CAF50;
+	color: white;
+	border-radius: 5px;
 }
 
 .pagination-link:hover {
-    background-color: #0056b3;
+	background-color: #34c746;
 }
 
 .pagination-link.active {
-    background-color: #0056b3;
+	background-color: #4CAF50;
+}
+
+.notification {
+    position: fixed;
+    top: 60px; 
+    left: 20px;
+    background-color: #4caf50; 
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.notification.error {
+    background-color: #f44336; 
+}
+
+.notification.success {
+    background-color: #4caf50; 
 }

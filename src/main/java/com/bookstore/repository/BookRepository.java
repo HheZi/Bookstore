@@ -21,14 +21,14 @@ import com.bookstore.entity.projection.UserReadDTO;
 @Repository
 public interface BookRepository extends ListCrudRepository<Book, Long>, PagingAndSortingRepository<Book, Long>{
 	
-	@EntityGraph(attributePaths = "user")
+	@EntityGraph(attributePaths = "createdBy")
 	public Optional<Book> findById(Long id);
 	
-	public Page<Book> findByTitleContaining(String formatName, Pageable size);
+	public Page<Book> findByTitleContainingIgnoreCase(String formatName, Pageable size);
 	
 	@Query("select b.cover from Book b where b.id = :id")
 	public String getCoverById(@Param("id") Long id);
 	
-	@Query("from Book b where b.user.id = :id")
+	@Query("from Book b where b.createdBy.id = :id")
 	public List<Book> findByUser(@Param("id") Integer id);
 }

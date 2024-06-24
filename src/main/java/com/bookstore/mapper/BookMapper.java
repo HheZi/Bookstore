@@ -37,7 +37,7 @@ public class BookMapper {
 				.genre(book.getGenre())
 				.language(book.getLanguage())
 				.numbersOfPages(book.getNumbersOfPages())
-				.user(userOptional ? userMapper.userToUserReadDto(book.getUser()) : null)
+				.user(userOptional ? userMapper.userToUserReadDto(book.getCreatedBy()) : null)
 				.dateOfPublishing(book.getDateOfPublishing())
 				.coverUrl("/books/%d/cover".formatted(book.getId()))
 				.build();
