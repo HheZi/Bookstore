@@ -9,10 +9,8 @@
 <body>
 	<div class="register-container">
 		<h2>Register</h2>
-		<div th:if="${param.error}">
-			<p class="error-message">Wrong input</p>
-		</div>
-		<form id="registerForm" action="/registration" method="post">
+		<div id="message"></div>
+		<form id="registerForm">
 			<div class="input-group">
 				<label for="username">Username</label> <input type="text"
 					id="username" name="username" required>
@@ -25,11 +23,12 @@
 				<label for="password">Password</label> <input type="password"
 					id="password" name="password" required>
 			</div>
-			<button type="submit">Register</button>
+			<button id="reg">Register</button>
 			<div class="reg-href">
 				<a href="../login">Already have an account?</a>
 			</div>
 		</form>
 	</div>
+	<script src="/scripts/registration.js"></script>
 </body>
 </html>

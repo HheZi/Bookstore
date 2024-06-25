@@ -45,16 +45,20 @@ public class UserService implements UserDetailsService{
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
 	}
 	
+	@Transactional(readOnly = true)
 	public Optional<UserEntity> findAllBooksOptionalByUserId(Integer id){
 		return userRepository.findById(id);
 	}
 	
+	@Transactional(readOnly = true)
 	public Optional<UserEntity> getUser(Integer id){
 		return userRepository.findById(id);
 	}
 	
 	@Transactional
 	public void saveUser(UserEntity user) {	
+		if(userRepository.existsByUsername(user.getUsername()))
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists");
 		userRepository.save(user);
 	}
 	
