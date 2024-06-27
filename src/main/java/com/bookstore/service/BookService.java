@@ -77,4 +77,9 @@ public class BookService {
 		entity.addBookToCart(book);
 		bookRepository.save(book);
 	}
+	
+	public void deleteBookById(Long id) {
+		String cover = bookRepository.deleteBookById(id);
+		imageService.deleteCover(pathToCovers, cover);
+	}
 }

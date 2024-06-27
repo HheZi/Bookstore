@@ -19,7 +19,7 @@ import com.bookstore.entity.UserEntity;
 import com.bookstore.entity.projection.UserReadDTO;
 
 @Repository
-public interface BookRepository extends ListCrudRepository<Book, Long>, PagingAndSortingRepository<Book, Long>{
+public interface BookRepository extends JpaRepository<Book, Long>{
 	
 	@EntityGraph(attributePaths = "createdBy")
 	public Optional<Book> findById(Long id);
@@ -30,5 +30,9 @@ public interface BookRepository extends ListCrudRepository<Book, Long>, PagingAn
 	public String getCoverById(@Param("id") Long id);
 	
 	@Query("from Book b where b.createdBy.id = :id")
+	@EntityGraph(attributePaths = "createdBy")
 	public List<Book> findByUser(@Param("id") Integer id);
+	
+	@Query(value = "delete from books b where b.id = :id returning b.cover", nativeQuery = true)
+	public String deleteBookById(@Param("id") Long id);
 }
