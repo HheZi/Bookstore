@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Shopping Cart</title>
+    <link href="/styles/cartStyle.css" rel="stylesheet"/>
+    <link href="/styles/headerStyle.css" rel="stylesheet"/>
+</head>
+<body>
+    <header th:replace="~{fragments :: header}"></header>
+    <div class="cart-container">
+        <table class="cart-table">
+            <thead>
+                <tr>
+                    <th>Обложка</th>
+                    <th>Название</th>
+                    <th>Автор</th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                    <th>Удалить</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+        <div class="total-price">
+            <span>Общая сумма: </span><span id="totalPrice">0.00</span> грн.
+        </div>
+        <button id="checkoutButton">Оформить заказ</button>
+    </div>
+    <script src="/scripts/header.js"></script>
+    <script src="/scripts/cart.js"></script>
+</body>
+</html>

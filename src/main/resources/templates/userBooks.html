@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>User's Books</title>
+    <link rel="stylesheet" href="/styles/headerStyle.css">
+    <link rel="stylesheet" href="/styles/userBooks.css">
+</head>
+<body>
+    <header th:replace="~{fragments :: header}"></header>
+    <div class="container">
+        <h1 id="titleText"></h1>
+        <table id="booksTable">
+            <thead>
+                <tr>
+                    <th>Cover</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+    </div>
+    <div id="notification"></div>
+    <script src="/scripts/header.js"></script>
+    <script src="/scripts/userBooks.js"></script>  
+</body>
+</html>
