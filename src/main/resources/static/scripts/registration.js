@@ -1,27 +1,24 @@
-document.querySelector("#reg").addEventListener("click", function(event){
-	event.preventDefault();
-	
-	const message = document.querySelector("#message");
-	
-	const form = new FormData(document.querySelector("#registerForm"))
-	
-	fetch("http://localhost:8080/users/reg", {
-		method: "POST",
-		body: form
-	})
-	.then(res =>{
-		if(!res.ok){
-			message.className = "error-message";
-			message.textContent = "Wrong Input"
-		}
-		else{
-			message.className = "success-message";
-			message.textContent = "User registered!";			
-		}
-		
-	})
-	.catch(ex =>{
-		message.className = "error-message";
-		message.textContent = "Something went wrong"
-	});
-})
+document.querySelector("#reg").addEventListener("click", async function(event){
+    event.preventDefault();
+
+    const message = document.querySelector("#message");
+    const form = new FormData(document.querySelector("#registerForm"));
+
+    try {
+        const response = await fetch("http://localhost:8080/users/reg", {
+            method: "POST",
+            body: form
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || 'Произошла ошибка при регистрации');
+        }
+
+        message.className = "success-message";
+        message.textContent = "User created!";
+    } catch (ex) {
+        message.className = "error-message";
+        message.textContent = ex.message;
+    }
+});

@@ -21,5 +21,11 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer>{
 	@EntityGraph(attributePaths = "booksInCart")
 	public Optional<UserEntity> findById(Integer id);
 	
+	@Query("from UserEntity u where u.id = :id")
+	public Optional<UserEntity> findByIdIgnoreCart(@Param("id") Integer id);
+	
 	public boolean existsByUsername(String username);
+	
+	@Query("select u.avatar from UserEntity u where u.id = :id")
+	public String getAvatar(@Param("id") Integer id);
 }

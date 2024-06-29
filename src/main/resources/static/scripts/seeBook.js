@@ -1,4 +1,4 @@
-async function makeRequest(url, method, optional) {
+async function makeRequest(url, method) {
     const req = {
         method: method,
         headers: {
@@ -9,16 +9,16 @@ async function makeRequest(url, method, optional) {
     const response = await fetch(url, req);
     if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message);
+        throw new Error(errorData.detail);
     }
-    if(optional)
-    	return response.json();
+    return response;
 }
 
 async function getBook() {
     const url = document.location.href.split('/').slice(-1)[0];
-    const res = await makeRequest('http://localhost:8080/books/' + url, "GET", true);
-    updateInfo(res);
+    const res = await makeRequest('http://localhost:8080/books/' + url, "GET");
+    const book =  await res.json();
+    updateInfo(book);
 }
 
 function updateInfo(book) {
@@ -40,7 +40,7 @@ function updateInfo(book) {
             <p class="book-pages">Количество страниц: ${book.numbersOfPages}</p>
             <p class="book-publishing-date">Дата публикации: ${book.dateOfPublishing}</p>
             <p class="book-description">Описание: ${book.description}</p>
-            <p><a class="book-user" href="../userBooks?user=${book.user.id}">Пользователь: ${book.user.username}</a></p>
+            <p><a class="book-user" href="../seeUser?user=${book.user.id}">Пользователь: ${book.user.username}</a></p>
             <button class="add-to-cart" onclick="addToCart(${book.id}, userAuth)">Добавить в корзину</button>
         </div>
     `;
@@ -51,7 +51,7 @@ function updateInfo(book) {
 
 async function addToCart(id, userId) {
     try {
-        await makeRequest(`http://localhost:8080/cart/${id}/${userId.id}`, "POST", false);
+        await makeRequest(`http://localhost:8080/cart/${id}/${userId.id}`, "POST");
         showNotification('Книга успешно добавлена в корзину!', 'success');
     } catch (error) {
         showNotification(error.message, 'error');
@@ -59,14 +59,13 @@ async function addToCart(id, userId) {
 }
 
 function showNotification(message, type) {
-    const notification = document.createElement('div');
-    notification.classList.add('notification', type);
+    const notification = document.getElementById('message');
+    notification.className = `notification ${type}`;
     notification.textContent = message;
-
-    document.body.appendChild(notification);
+    notification.style.display = 'block'
 
     setTimeout(() => {
-        notification.remove();
+        notification.style.display = 'none';
     }, 3000);
 }
 

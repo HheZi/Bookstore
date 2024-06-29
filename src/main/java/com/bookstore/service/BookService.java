@@ -1,5 +1,6 @@
 package com.bookstore.service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.bookstore.entity.Book;
 import com.bookstore.entity.UserEntity;
 import com.bookstore.entity.projection.UserReadDTO;
+import com.bookstore.exception.ResponseException;
 import com.bookstore.repository.BookRepository;
 
 import lombok.SneakyThrows;
@@ -44,7 +46,7 @@ public class BookService {
 	
 	@Transactional(readOnly = true)
 	public Optional<Book> findById(Long id) {
-		return bookRepository.findById(id);
+		return bookRepository.findByIdWithCreatedBy(id);
 	}
 	
 	@Transactional(readOnly = true)
@@ -67,19 +69,27 @@ public class BookService {
 	@SneakyThrows
 	public void uploadImage(MultipartFile image) {
 		imageService.upload(pathToCovers, image.getOriginalFilename(), image.getInputStream());
-		
 	}
 	
 	@Transactional
-	public void addBookToCart(Long id, UserEntity entity){
+	public void addBookToCart(Long id, UserEntity entity) {
 		Book book = findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+				.orElseThrow(() -> new ResponseException(HttpStatus.NOT_FOUND, "User not found"));
 		entity.addBookToCart(book);
 		bookRepository.save(book);
 	}
 	
+	@Transactional
 	public void deleteBookById(Long id) {
-		String cover = bookRepository.deleteBookById(id);
-		imageService.deleteCover(pathToCovers, cover);
+		Book book = bookRepository.findByIdWithUsersInCart(id)
+			.orElseThrow(() -> new ResponseException(HttpStatus.NOT_FOUND, "User not found"));
+		
+		if (!book.getUsersInCart().isEmpty()) {
+			throw new ResponseException(HttpStatus.CONFLICT, "It is impossible to delete because this book is in the cart of other users.");
+		}
+
+		bookRepository.delete(book);
+		
+		imageService.deleteCover(pathToCovers, book.getCover());
 	}
 }

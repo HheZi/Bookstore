@@ -78,7 +78,6 @@ public class Book extends BookAudit{
 	@ManyToMany(mappedBy = "booksInCart", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
 	@Exclude
 	@ToString.Exclude
-	@Setter(AccessLevel.NONE)
 	private List<UserEntity> usersInCart;
 	
 	public void addUserToCart(UserEntity user) {

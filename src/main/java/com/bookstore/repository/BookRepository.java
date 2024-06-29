@@ -22,6 +22,13 @@ import com.bookstore.entity.projection.UserReadDTO;
 public interface BookRepository extends JpaRepository<Book, Long>{
 	
 	@EntityGraph(attributePaths = "createdBy")
+	@Query("from Book b where b.id = :id")
+	public Optional<Book> findByIdWithCreatedBy(@Param("id") Long id);
+	
+	@EntityGraph(attributePaths = "usersInCart")
+	@Query("from Book b where b.id = :id")
+	public Optional<Book> findByIdWithUsersInCart(@Param("id") Long id);
+	
 	public Optional<Book> findById(Long id);
 	
 	public Page<Book> findByTitleContainingIgnoreCase(String formatName, Pageable size);
@@ -32,7 +39,4 @@ public interface BookRepository extends JpaRepository<Book, Long>{
 	@Query("from Book b where b.createdBy.id = :id")
 	@EntityGraph(attributePaths = "createdBy")
 	public List<Book> findByUser(@Param("id") Integer id);
-	
-	@Query(value = "delete from books b where b.id = :id returning b.cover", nativeQuery = true)
-	public String deleteBookById(@Param("id") Long id);
 }

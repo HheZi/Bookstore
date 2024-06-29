@@ -28,32 +28,32 @@ import lombok.Setter;
 @Builder
 public class BookWriteDTO {
 	
-	@NotNull
+	@NotNull(message = "Title is required")
 	private String title;
 	
-	@NotNull 
+	@NotNull(message = "Author is required")
 	private String author;
 	
-	@NotNull 
+	@NotNull(message = "Genre is required")
 	private Genre genre;
 	
-	@NotNull 
+	@NotNull(message = "Language is required")
 	private Language language;
 	
 	@Min(value = 10, message = "Minimum 10 pages required")
-	@NotNull
+	@NotNull(message = "Numbers of pages is required")
 	private Integer numbersOfPages;
 	
-	@NotNull 
-	@Positive(message = "Need to be positive")
+	@NotNull(message = "Price is required")
+	@Positive(message = "Price need to be positive")
 	private Float price;
 	
 	@Nullable
-	@Length(max = 360)
+	@Length(max = 360, message = "Max length of description is 360 symbols")
 	private String description;
 	
 	@Nullable
-	@PastOrPresent(message = "Only past or present time")
+	@PastOrPresent(message = "The publication date must be in the past or present tense.")
 	private LocalDate dateOfPublishing;
 	
 	@Nullable

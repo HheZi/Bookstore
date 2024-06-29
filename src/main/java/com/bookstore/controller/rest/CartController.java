@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.bookstore.entity.projection.BookReadDTO;
+import com.bookstore.exception.ResponseException;
 import com.bookstore.mapper.BookMapper;
 import com.bookstore.service.CartService;
 
@@ -34,7 +35,7 @@ public class CartController {
 	@GetMapping("/{id}")
 	public List<BookReadDTO> getCart(@PathVariable("id") Integer id){
 		return service.getBooksFromCart(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND))
+				.orElseThrow(() -> new ResponseException(HttpStatus.NOT_FOUND, "Books are not found"))
 				.getBooksInCart()
 				.stream()
 				.map(t -> mapper.bookToBookReadDTO(t, false))

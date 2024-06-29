@@ -30,6 +30,7 @@ import com.bookstore.entity.Book;
 import com.bookstore.entity.UserEntity;
 import com.bookstore.entity.projection.BookReadDTO;
 import com.bookstore.entity.projection.BookWriteDTO;
+import com.bookstore.exception.ResponseException;
 import com.bookstore.mapper.BookMapper;
 import com.bookstore.security.SecurityUserDetails;
 import com.bookstore.service.BookService;
@@ -63,10 +64,10 @@ public class BooksController {
 	}
 	
 	@GetMapping("/{id}")
-	public BookReadDTO getOne(@PathVariable("id") Long id) {
+	public BookReadDTO getOne(@PathVariable("id") Long id)  {
 		return bookService.findById(id)
 				.map(b -> bookMapper.bookToBookReadDTO(b, true))
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+				.orElseThrow(() -> new ResponseException(HttpStatus.NOT_FOUND, "Book is not found"));
 	}
 	
 	@GetMapping("/allBooks/{userId}")
@@ -83,12 +84,12 @@ public class BooksController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> createBook(@ModelAttribute @Validated BookWriteDTO dto, BindingResult result) {
-		if (result.hasErrors()) {
-			return status(HttpStatus.NOT_ACCEPTABLE).build();
+	public ResponseEntity<?> createBook(@ModelAttribute @Validated BookWriteDTO dto, BindingResult br)  {
+		if (br.hasErrors()) {
+			throw new ResponseException(HttpStatus.NOT_ACCEPTABLE, br.getFieldError().getDefaultMessage());
 		}
-		bookService.saveBook(bookMapper.bookWriteDtoToBook(dto));
-		
+		bookService.uploadImage(dto.getCover());
+		bookService.saveBook(bookMapper.bookWriteDtoToBook(dto));		
 		return status(HttpStatus.CREATED).build();
 	}
 	

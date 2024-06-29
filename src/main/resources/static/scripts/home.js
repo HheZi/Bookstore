@@ -1,4 +1,4 @@
-async function makeRequest(url, method, optional, data = null) {
+async function makeRequest(url, method, data = null) {
     const req = {
         method: method
     };
@@ -13,15 +13,17 @@ async function makeRequest(url, method, optional, data = null) {
     const response = await fetch(url, req);
     if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message);
+        throw new Error(errorData.detail);
     }
-    if(optional)
-    	return response.json();
+    
+    return response;
 }
 
 async function loadAll(page = 0, size = 10, titleFilter = '') {
     try {
-        const res = await makeRequest(`http://localhost:8080/books?page=${page}&size=${size}&titleFilter=${titleFilter}`, "GET", true);
+        const response = await makeRequest(`http://localhost:8080/books?page=${page}&size=${size}&titleFilter=${titleFilter}`, "GET");
+        const res = await response.json();
+
         updatePage(res.content);
         updatePagination(res.pageable, res.totalPages, titleFilter);
     } catch (error) {
@@ -67,7 +69,7 @@ function updatePage(books) {
 
 async function addToCart(id) {
     try {
-        await makeRequest(`http://localhost:8080/cart/${id}/${userAuth.id}`, "POST", false);
+        await makeRequest(`http://localhost:8080/cart/${id}/${userAuth.id}`, "POST");
         showNotification("Книга добалена в корзину!", "success")
     } catch (error) {
         showNotification(error.message || 'Ошибка при добавлении книги в корзину', 'error');

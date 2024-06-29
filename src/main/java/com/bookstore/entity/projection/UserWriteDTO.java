@@ -24,21 +24,24 @@ import lombok.Setter;
 @Builder
 public class UserWriteDTO {
 
-	@Email
-	@NotNull
+	@Email(message = "The email must be in email address format")
+	@NotNull(message = "Email is required")
 	private String email;
 	
-	@NotNull
-	@Length(min = 5, max = 40)
+	@NotNull(message = "Username is required")
+	@Length(min = 5, max = 40, message = "Username length from 5 to 40")
 	private String username;
 	
-	@NotNull
-	@Length(min = 5, max = 60)
+	@Nullable
 	private String password;
+	
+	@Nullable
+	private String oldPassword;
 
 	@Nullable
 	private MultipartFile avatar;
 	
 	@NotNull
 	private Role role = Role.USER;
+	
 }

@@ -1,57 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8">
-<title>Add Book</title>
-<link rel="stylesheet" href="/styles/addBookStyle.css">
-<link rel="stylesheet" href="/styles/headerStyle.css" />
+    <meta charset="UTF-8">
+    <title>Add Book</title>
+    <link rel="stylesheet" href="/styles/addBookStyle.css">
+    <link rel="stylesheet" href="/styles/headerStyle.css" />
 </head>
 <body>
-	<header th:replace="~{fragments :: header}"></header>
-	<div class="wrapper">
-		<div class="container">
-			<div class="success-message"></div>
-			<div class="error-message"></div>
-			<h1 id="title">Add New Book</h1>
-			<form id="formPost" class="form">
-				<label for="cover" class="form-label">Cover Of Book:</label> <input
-					type="file" name="cover" id="cover" class="file-field"><br>
-
-				<input type="text" name="title" placeholder="Title" required id="name"
-					class="input-field"><br> 
-					
-					<input type="text"
-					name="author" placeholder="Author" required id="author"
-					class="input-field"><br> 
-					
-					<select required id="genres"
-					name="genre" class="select-field">
-					<option th:each="genre : ${genres}" th:text="${genre}"></option>
-					
-				</select><br> 
-				<select required id="lang" name="language"
-					class="select-field">
-					<option th:each="language : ${languages}" th:text="${language}"></option>
-				</select><br> 
-				
-				<input type="number" name="numbersOfPages"
-					placeholder="Number Of Pages" id="numbersOfPages"
-					class="input-field"><br> 
-					
-					<input name="price"
-					type="number" placeholder="Price" step=".01" class="input-field"><br>
-
-				<textarea rows="15" cols="30" id="disc" name="description"
-					placeholder="Description" class="textarea-field"></textarea>
-				<br> 
-				<input type="date" name="dateOfPublishing"
-					placeholder="Date Of Publising" class="date-field"><br>
-
-				<button type="submit" class="submit-button">Create New Book</button>
-			</form>
-		</div>
-	</div>
-	<script src="/scripts/header.js"></script>
-	<script src="/scripts/addBook.js"></script>
+    <header th:replace="~{fragments :: header}"></header>
+    <div class="wrapper">
+        <div class="container">
+            <h1 id="title">Add New Book</h1>
+            <div id="message"></div>
+            <form id="formPost" class="form">
+                <label for="cover" class="form-label">Cover Of Book:</label>
+                <input type="file" name="cover" id="cover" class="file-field"><br>
+                
+                <input type="text" name="title" placeholder="Title" required id="name" class="input-field"><br>
+                <input type="text" name="author" placeholder="Author" required id="author" class="input-field"><br>
+                
+                <select required id="genres" name="genre" class="select-field">
+                    <option th:each="genre : ${genres}" th:text="${genre}"></option>
+                </select><br>
+                
+                <select required id="lang" name="language" class="select-field">
+                    <option th:each="language : ${languages}" th:text="${language}"></option>
+                </select><br>
+                
+                <input type="number" name="numbersOfPages" placeholder="Number Of Pages" id="numbersOfPages" class="input-field"><br>
+                <input name="price" type="number" placeholder="Price" step=".01" class="input-field"><br>
+                
+                <textarea rows="15" cols="30" id="disc" name="description" placeholder="Description" class="textarea-field"></textarea><br>
+                <input type="date" name="dateOfPublishing" placeholder="Date Of Publishing" class="date-field"><br>
+                
+                <button type="submit" class="submit-button">Create New Book</button>
+            </form>
+        </div>
+    </div>
+    <script src="/scripts/header.js"></script>
+    <script src="/scripts/addBook.js"></script>
 </body>
 </html>

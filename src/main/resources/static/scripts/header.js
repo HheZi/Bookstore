@@ -22,7 +22,7 @@ function toggleDropdown() {
 		userAuth = user;
 		document.querySelector("#profile").href = `../seeUser?user=${user.id}`
 		document.querySelector("#books").href = `../userBooks?user=${user.id}`;
-		document.querySelector("#avatar").src = user.avatarUrl;
+		document.querySelector("#avatarAuth").src = user.avatarUrl;
 		document.querySelector("#username").innerHTML = user.username;
 		document.querySelector("#cart").href = `../seeCart?user=${user.id}`
 	 });

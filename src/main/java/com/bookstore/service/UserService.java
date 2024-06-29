@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.logging.LogLevel;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,9 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.bookstore.entity.UserEntity;
+import com.bookstore.entity.projection.UserWriteDTO;
+import com.bookstore.exception.ResponseException;
 import com.bookstore.repository.UserRepository;
 import com.bookstore.security.SecurityUserDetails;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -32,6 +36,9 @@ public class UserService implements UserDetailsService{
 	@Autowired
 	private ImageService imageService;
 	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 	@Value("${app.image.avatar.default:/Programming/Java//Bookstore/images/avatars/default.png}")
 	private String defaultAvatar;
 	
@@ -42,37 +49,70 @@ public class UserService implements UserDetailsService{
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		return new SecurityUserDetails(userRepository.findByUsername(username)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)));
+				.orElseThrow(() -> new UsernameNotFoundException("User is not found")));
 	}
 	
-	@Transactional(readOnly = true)
-	public Optional<UserEntity> findAllBooksOptionalByUserId(Integer id){
-		return userRepository.findById(id);
-	}
 	
 	@Transactional(readOnly = true)
-	public Optional<UserEntity> getUser(Integer id){
+	public Optional<UserEntity> getUserWithCart(Integer id){
 		return userRepository.findById(id);
 	}
 	
 	@Transactional
-	public void saveUser(UserEntity user) {	
+	public Optional<UserEntity> getOne(Integer id){
+		return userRepository.findByIdIgnoreCart(id);
+	}
+	
+	@Transactional
+	public void saveUser(UserEntity user){	
 		if(userRepository.existsByUsername(user.getUsername()))
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists");
+			throw new ResponseException(HttpStatus.CONFLICT, "User already exists");
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userRepository.save(user);
 	}
 	
-	public byte[] getCover(String avatar) {
+	@Transactional(readOnly = true)
+	public byte[] getAvatar(Integer id) {
+		String avatar = userRepository.getAvatar(id);
+		
 		return imageService.getImage(pathToAvatars, avatar, defaultAvatar);
 	}
 	
-	public UserEntity getAuth() {
+	public SecurityUserDetails getAuthContext() {
 		return ((SecurityUserDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).getUserEntity();
+				.getAuthentication().getPrincipal());
 	}
 	
 	@Transactional(readOnly = true)
 	public Optional<UserEntity> findByUsername(String username) {
 		return userRepository.findByUsername(username);
+	}
+	
+	@Transactional
+	@SneakyThrows
+	public void updateUser(Integer id, UserWriteDTO dto) {
+		UserEntity entity = getUserWithCart(id)
+				.orElseThrow(() -> new ResponseException(HttpStatus.NOT_FOUND, "User is not found"));
+		
+		entity.setEmail(dto.getEmail());			
+		entity.setUsername(dto.getUsername());			
+		imageService.upload(pathToAvatars, dto.getAvatar().getOriginalFilename(),  dto.getAvatar().getInputStream());
+		
+		if(!dto.getAvatar().isEmpty()) {
+			entity.setAvatar(dto.getAvatar().getOriginalFilename());
+		}
+		
+		if (!dto.getOldPassword().isEmpty()) {
+			if (passwordEncoder.matches(dto.getOldPassword(), entity.getPassword())) 
+				entity.setPassword(passwordEncoder.encode(dto.getPassword()));				
+			
+			else 
+				throw new ResponseException(HttpStatus.CONFLICT, "Wrong password");
+			
+		}
+		
+		getAuthContext().setUserEntity(entity);
+		
+		userRepository.save(entity);
 	}
 }

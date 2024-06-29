@@ -1,35 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>User Profile</title>
-    <link rel="stylesheet" href="/styles/seeUserStyle.css">
-    <link rel="stylesheet" href="/styles/headerStyle.css">
+<meta charset="UTF-8">
+<title>User Profile</title>
+<link rel="stylesheet" href="/styles/seeUserStyle.css">
+<link rel="stylesheet" href="/styles/headerStyle.css">
 </head>
 <body>
-    <header th:replace="~{fragments :: header}"></header>
-    <main>
-        <div class="container">
-            <h1>Профиль пользователя</h1>
-            <div class="avatar-container">
-                <img id="user-avatar" alt="Аватар пользователя" class="avatar">
-                <input type="file" id="avatarUpload" class="file-input" accept="image/*">
-            </div>
-            <form id="userForm">
-                <div class="form-group">
-                    <label for="username">Имя пользователя:</label>
-                    <input type="text" id="username" name="username" required disabled>
-                </div>
-                <div class="form-group">
-                    <label for="email">Электронная почта:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <button type="submit">Сохранить</button>
-            </form>
-            <div id="notification" class="notification"></div>
-        </div>
-    </main>
-    <script src="/scripts/header.js"></script>
-    <script src="/scripts/seeUser.js"></script>
+	<header th:replace="~{fragments :: header}"></header>
+	<main>
+		<div class="container">
+			<h1 id="titleProf"></h1>
+			<div id="notification" class="notification"></div>
+				<div class="avatar-container">
+					<img id="user-avatar" alt="Аватар пользователя" class="avatar">
+				</div>
+			<form id="userForm">
+				<div class="form-group">
+					<label for="avatarUpload">Load Avatar Image:</label>
+					<input type="file" id="avatarUpload" class="file-input" name="avatar" accept="image/*">
+				</div>
+				<div class="form-group">
+					<input type="text" id="usernameOfUser" name="username"
+						placeholder="Username:" required>
+				</div>
+				<div class="form-group">
+					<input type="email" id="email" name="email" placeholder="Email:"
+						required>
+				</div>
+				<div class="form-group">
+					<input type="password" id="oldPassword" name="oldPassword"
+						placeholder="Old password:">
+				</div>
+				<div class="form-group">
+					<input type="password" id="password" name="password"
+						placeholder="New password:">
+				</div>
+				<button type="submit">Submit</button>
+			</form>
+			<a id="hrefSeeBooks">
+				<button id="seeBooks">See books of this user</button>
+			</a>
+		</div>
+	</main>
+	<script src="/scripts/header.js"></script>
+	<script src="/scripts/seeUser.js"></script>
 </body>
 </html>

@@ -73,7 +73,6 @@ body {
 
 .success-message,
 .error-message {
-    display: none;
     margin-bottom: 15px;
     padding: 10px;
     border-radius: 5px;
