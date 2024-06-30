@@ -19,7 +19,7 @@ async function loadCart() {
 	const params = new URLSearchParams(document.location.search);
 	const user = params.get("user");
     try {
-        const cart = await makeRequest(`http://localhost:8080/cart/${user}`, "GET", true);
+        const cart = await makeRequest(`http://localhost:8080/api/cart/${user}`, "GET", true);
         updateCart(cart);
     } catch (error) {
         console.error("Error loading cart:", error);

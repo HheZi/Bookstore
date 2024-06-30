@@ -20,6 +20,7 @@ h1 {
 .avatar-container {
     text-align: center;
     margin-bottom: 20px;
+    flex-direction: column;
 }
 
 #user-avatar {
@@ -58,6 +59,10 @@ button {
 
 button:hover {
     background-color: #555;
+}
+
+#removeAvatar{
+	width: 200px;
 }
 
 #seeBooks{

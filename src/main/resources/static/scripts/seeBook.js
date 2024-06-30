@@ -16,7 +16,7 @@ async function makeRequest(url, method) {
 
 async function getBook() {
     const url = document.location.href.split('/').slice(-1)[0];
-    const res = await makeRequest('http://localhost:8080/books/' + url, "GET");
+    const res = await makeRequest('http://localhost:8080/api/books/' + url, "GET");
     const book =  await res.json();
     updateInfo(book);
 }
@@ -38,9 +38,10 @@ function updateInfo(book) {
             <p class="book-genre">Жанр: ${book.genre}</p>
             <p class="book-language">Язык: ${book.language}</p>
             <p class="book-pages">Количество страниц: ${book.numbersOfPages}</p>
+            <p>Количество: ${book.quantity}</p>
             <p class="book-publishing-date">Дата публикации: ${book.dateOfPublishing}</p>
             <p class="book-description">Описание: ${book.description}</p>
-            <p><a class="book-user" href="../seeUser?user=${book.user.id}">Пользователь: ${book.user.username}</a></p>
+            <p><a class="book-user" href="../profile?user=${book.user.id}">Пользователь: ${book.user.username}</a></p>
             <button class="add-to-cart" onclick="addToCart(${book.id}, userAuth)">Добавить в корзину</button>
         </div>
     `;
@@ -51,7 +52,7 @@ function updateInfo(book) {
 
 async function addToCart(id, userId) {
     try {
-        await makeRequest(`http://localhost:8080/cart/${id}/${userId.id}`, "POST");
+        await makeRequest(`http://localhost:8080/api/cart/${id}/${userId.id}`, "POST");
         showNotification('Книга успешно добавлена в корзину!', 'success');
     } catch (error) {
         showNotification(error.message, 'error');

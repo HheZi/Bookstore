@@ -24,7 +24,7 @@ public class UserMapper {
 		return UserReadDTO.builder()
 				.id(user.getId())
 				.username(user.getUsername())
-				.avatarUrl("../users/%d/avatar".formatted(user.getId()))
+				.avatarUrl("../api/users/%d/avatar".formatted(user.getId()))
 				.email(user.getEmail())
 				.build();
 	}

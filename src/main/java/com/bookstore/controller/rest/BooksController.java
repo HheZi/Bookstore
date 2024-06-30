@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -35,10 +36,11 @@ import com.bookstore.mapper.BookMapper;
 import com.bookstore.security.SecurityUserDetails;
 import com.bookstore.service.BookService;
 
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/books")
+@RequestMapping("/api/books")
 public class BooksController {
 	
 	@Autowired
@@ -46,12 +48,6 @@ public class BooksController {
 	
 	@Autowired
 	private BookService bookService;
-	
-	@Value("${app.auth.admin.username: Admin}")
-	private String authAdminUsername;
-	
-	@Value("${app.auth.admin.username: 12345}")
-	private String authAdminPassword;
 	
 	@GetMapping
 	public Page<BookReadDTO> getAll(@RequestParam(defaultValue = "0", name = "page") Integer page,
@@ -87,10 +83,29 @@ public class BooksController {
 	public ResponseEntity<?> createBook(@ModelAttribute @Validated BookWriteDTO dto, BindingResult br)  {
 		if (br.hasErrors()) {
 			throw new ResponseException(HttpStatus.NOT_ACCEPTABLE, br.getFieldError().getDefaultMessage());
-		}
-		bookService.uploadImage(dto.getCover());
+		}	
 		bookService.saveBook(bookMapper.bookWriteDtoToBook(dto));		
+		bookService.uploadImage(dto.getCover());
 		return status(HttpStatus.CREATED).build();
+	}
+	
+	@PutMapping("/{id}")
+	public ResponseEntity<?> updateBook(@ModelAttribute @Validated BookWriteDTO dto, BindingResult br,
+										@PathVariable("id") Long id){
+		if (br.hasErrors()) {
+			throw new ResponseException(HttpStatus.NOT_ACCEPTABLE, br.getFieldError().getDefaultMessage());
+		}		
+		
+		Book book = bookService.findById(id)
+		.orElseThrow(() -> new ResponseException(HttpStatus.NOT_FOUND, "The book is not found"));		
+		
+		bookService.saveBook(bookMapper.updateBookUsingWriteDto(book, dto));
+		
+		bookService.deleteCover(book);
+		
+		bookService.uploadImage(dto.getCover());
+		
+		return ResponseEntity.ok().build();
 	}
 	
 	@DeleteMapping("/{id}")

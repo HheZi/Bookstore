@@ -7,12 +7,14 @@ import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Role;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,7 +35,7 @@ import jakarta.annotation.security.PermitAll;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UsersController {
 
 	@Autowired
@@ -63,24 +65,30 @@ public class UsersController {
 	public ResponseEntity<?> registrUser(@ModelAttribute @Validated UserWriteDTO dto, BindingResult br){
 		if(br.hasErrors()) {
 			throw new ResponseException(HttpStatus.NOT_ACCEPTABLE, br.getFieldError().getDefaultMessage());
-		}
-		
-		UserEntity user = userMapper.userWriteDtoToUser(dto); 
-		
-		userService.saveUser(user);
+		}	
+		userService.registerUser(userMapper.userWriteDtoToUser(dto));
 		
 		return status(HttpStatus.CREATED).build();
 	}
 	
 	@PutMapping("/{id}")
 	public ResponseEntity<?> updateUser(@ModelAttribute @Validated UserWriteDTO dto, 
-										@PathVariable("id") Integer id, 
-										BindingResult br) { 
+										BindingResult br, 
+										@PathVariable("id") Integer id) { 
 		if(br.hasErrors()) {
 			throw new ResponseException(HttpStatus.NOT_ACCEPTABLE, br.getFieldError().getDefaultMessage());
 		}
 		
 		userService.updateUser(id, dto);
 		return ResponseEntity.ok().build();
+	}
+	
+	@DeleteMapping("{id}/avatar")
+	public void deleteAvatar(@PathVariable("id") Integer id) {
+		UserEntity entity = userService.getOne(id)
+				.orElseThrow(() -> new ResponseException(NOT_FOUND, "The user is not found"));
+		entity.setAvatar("");
+		userService.deleteAvatar(entity.getAvatar());
+		userService.saveUser(entity);
 	}
 }

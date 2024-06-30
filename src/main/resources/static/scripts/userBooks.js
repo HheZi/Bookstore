@@ -20,7 +20,7 @@ async function makeRequest(url, method) {
 
 async function getBooksByUser() {
     try {
-        const res = await makeRequest(`http://localhost:8080/books/allBooks/${user}`, "GET");
+        const res = await makeRequest(`http://localhost:8080/api/books/allBooks/${user}`, "GET");
         const books = await res.json();
         updateTable(books);
     } catch (error) {
@@ -31,55 +31,74 @@ async function getBooksByUser() {
 function updateTable(books) {
     const tbody = document.querySelector("#booksTable tbody");
     tbody.innerHTML = '';
-
-    books.forEach(book => {
-        const row = document.createElement("tr");
+    document.querySelector("#booksTable thead").innerHTML = ``;
+	
+	if(books.length !== 0){
 		
-		let but = `<button id="butt${book.id}">Add to cart</button>`;
-		if (user == userAuth.id) {
-			but = `<button id="butt${book.id}">Delete</button>`;
-		}
+		document.getElementById("headTable").innerHTML = `<tr>
+                    <th>Cover</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Actions</th>
+                </tr>`;
 		
-        row.innerHTML = `
-            <td>
-                <a href="/seeBook/${book.id}">
-                    <img src="${book.coverUrl}" alt="Cover" class="cover">
-                </a>
-            </td>
-            <td>
-                <a href="/seeBook/${book.id}">
-                    ${book.title}
-                </a>
-            </td>
-            <td>
-                <a href="/seeBook/${book.id}">
-                    ${book.author}
-                </a>
-            </td>
-            <td>
-                ${but}
-            </td>
-        `;
-
-        tbody.appendChild(row);
-        document.querySelector(`#butt${book.id}`).addEventListener("click", async () => {
-            if (user == userAuth.id) {
-                try {
-                    await makeRequest(`http://localhost:8080/books/${book.id}`, "DELETE");
-                    getBooksByUser();
-                } catch (error) {
-                    showNotification(error.message || 'Ошибка при удалении книги', 'error');
-                }
-            } else {
-                addToCart(book.id);
-            }
-        });
-    });
+		
+	    books.forEach(book => {
+	        const row = document.createElement("tr");
+			
+			let updateBut = '';
+			let but = `<button id="butt${book.id}">Add to cart</button>`;
+			if (user == userAuth.id) {
+				but = `<button id="butt${book.id}">Delete</button>`;
+				updateBut = `<button onClick="location.href='../books/update?book=${book.id}'">Update</button>`
+			}
+			
+	        row.innerHTML = `
+	            <td>
+	                <a href="/books/${book.id}">
+	                    <img src="${book.coverUrl}" alt="Cover" class="cover">
+	                </a>
+	            </td>
+	            <td>
+	                <a href="/seeBook/${book.id}">
+	                    ${book.title}
+	                </a>
+	            </td>
+	            <td>
+	                <a href="/seeBook/${book.id}">
+	                    ${book.author}
+	                </a>
+	            </td>
+	            <td>
+	            	${updateBut}
+	                ${but}
+	            </td>
+	        `;
+	
+	        tbody.appendChild(row);
+	        document.querySelector(`#butt${book.id}`).addEventListener("click", async () => {
+	            if (user == userAuth.id) {
+	                try {
+	                    await makeRequest(`http://localhost:8080/api/books/${book.id}`, "DELETE");
+	                    getBooksByUser();
+	                } catch (error) {
+	                    showNotification(error.message || 'Ошибка при удалении книги', 'error');
+	                }
+	            } else {
+	                addToCart(book.id);
+	            }
+	        });
+	    });
+    }
+    else{
+		document.getElementById("titleText").innerText = "This user has no books"
+	}
+    
 }
 
 async function addToCart(id) {
     try {
-        await makeRequest(`http://localhost:8080/cart/${id}/${userAuth.id}`, "POST");
+        await makeRequest(`http://localhost:8080/api/cart/${id}/${userAuth.id}`, "POST");
         showNotification("Книга добалена в корзину!", "success")
     } catch (error) {
         showNotification(error.message || 'Ошибка при добавлении книги в корзину', 'error');

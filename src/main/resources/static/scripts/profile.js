@@ -1,4 +1,6 @@
-async function makeRequest(url, method, data = null, optional = true) {
+const userId = new URLSearchParams(window.location.search).get('user');
+
+async function makeRequest(url, method, data = null) {
     const req = {
         method: method
     };
@@ -19,13 +21,14 @@ async function makeRequest(url, method, data = null, optional = true) {
         const errorData = await response.json();
         throw new Error(errorData.message);
     }
-    if (optional)
-        return response.json();
+    
+    return response;
 }
 
 async function loadUserData(userId) {
     try {
-        const user = await makeRequest(`http://localhost:8080/users/${userId}`, "GET");
+        const res = await makeRequest(`http://localhost:8080/api/users/${userId}`, "GET")
+        const user = await  res.json();
         document.title = user.username;
         document.getElementById("titleProf").innerText = `Profile of ${user.username}`;
         document.getElementById('usernameOfUser').value = user.username;
@@ -36,6 +39,7 @@ async function loadUserData(userId) {
         if (userAuth.id !== user.id) {
             document.querySelectorAll('input').forEach(input => input.disabled = true);
             document.querySelector('button[type="submit"]').style.display = 'none';
+			document.querySelector("#removeAvatar").style.display = 'none'
             document.getElementById('avatarUpload').style.display = 'none';
             document.getElementById("oldPassword").style.display = 'none';
             document.getElementById("password").style.display = 'none';
@@ -48,8 +52,9 @@ async function loadUserData(userId) {
 async function updateUserData(userId) {
     const form = new FormData(document.getElementById("userForm"));
     try {
-        await makeRequest(`http://localhost:8080/users/${userId}`, "PUT", form, false);
-        showNotification("Данные успешно обновлены!", "success");
+        await makeRequest(`http://localhost:8080/api/users/${userId}`, "PUT", form);
+        loadUserData(userId);
+        showNotification("Profile is saved!", "success");
     } catch (error) {
         showNotification(error.message, 'error');
     }
@@ -67,7 +72,7 @@ function showNotification(message, type) {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-    const userId = new URLSearchParams(window.location.search).get('user');
+    
     loadUserData(userId);
 
     document.getElementById('userForm').addEventListener('submit', (event) => {
@@ -76,3 +81,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+document.querySelector("#removeAvatar").addEventListener("click", async () => {
+	 try{
+		 await makeRequest(`http://localhost:8080/api/users/${userId}/avatar`, "DELETE");
+		 loadUserData(userId);
+		 showNotification("Avatar is deleted!", "success");
+    } catch (error) {
+    	showNotification(error.message, 'error');
+    }
+})

@@ -48,6 +48,7 @@ table tr:hover {
 tbody button {
 	padding: 8px 16px;
 	background-color: #4CAF50;
+	margin-right: 5px;
 	border: none;
 	color: white;
 	border-radius: 4px;

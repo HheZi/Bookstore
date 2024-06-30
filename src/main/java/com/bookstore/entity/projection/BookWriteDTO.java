@@ -15,6 +15,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -47,6 +48,10 @@ public class BookWriteDTO {
 	@NotNull(message = "Price is required")
 	@Positive(message = "Price need to be positive")
 	private Float price;
+	
+	@NotNull(message = "Quantity is required")
+	@PositiveOrZero(message = "Quantity can only be zero or more")
+	private Integer quantity;
 	
 	@Nullable
 	@Length(max = 360, message = "Max length of description is 360 symbols")

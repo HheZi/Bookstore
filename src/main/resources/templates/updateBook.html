@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Book</title>
+    <link rel="stylesheet" href="/styles/updateBookStyle.css">
+    <link rel="stylesheet" href="/styles/headerStyle.css">
+</head>
+<body>
+    <header th:replace="~{fragments :: header}"></header>
+    <main>
+        <div class="container">
+            <h1>Update Book</h1>
+            <div id="notification" class="notification"></div>
+            <form id="updateBookForm">
+	            <div class="book-cover">
+	            	<img alt="Cover" id="coverImg">
+	            </div>
+                <div class="form-group">
+                    <label for="cover">Cover Of Book:</label>
+                    <input type="file" name="cover" id="cover" class="file-field">
+                </div>
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <input type="text" name="title" id="title" class="input-field" required>
+                </div>
+                <div class="form-group">
+                    <label for="author">Author:</label>
+                    <input type="text" name="author" id="author" class="input-field" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="genre">Genre:</label>
+                    <select required id="genres" name="genre" class="input-field">
+                    	<option th:each="genre : ${genres}" th:text="${genre}"></option>
+                	</select>
+                </div>
+                <div class="form-group">
+                    <label for="language">Language:</label>
+                    <select required id="lang" name="language" class="input-field">
+                    	<option th:each="language : ${languages}" th:text="${language}"></option>
+               		</select>
+                </div>
+                <div class="form-group">
+                    <label for="pages">Number of Pages:</label>
+                    <input type="number" name="numbersOfPages" id="pages" class="input-field" required>
+                </div>
+                <div class="form-group">
+                    <label for="price">Price:</label>
+                    <input type="number" name="price" id="price" class="input-field" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label for="quantity">Quantity:</label>
+                    <input type="number" name="quantity" id="quantity" class="input-field" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea name="description" id="description" class="textarea-field" rows="4" ></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="publishDate">Date of Publishing:</label>
+                    <input type="date" name="dateOfPublishing" id="publishDate" class="date-field" >
+                </div>
+                <button type="submit" class="submit-button">Update Book</button>
+            </form>
+        </div>
+    </main>
+    <script src="/scripts/header.js"></script>
+    <script src="/scripts/updateBook.js"></script>
+</body>
+</html>

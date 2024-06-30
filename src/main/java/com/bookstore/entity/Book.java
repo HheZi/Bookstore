@@ -65,6 +65,8 @@ public class Book extends BookAudit{
 	
 	private Float price;
 	
+	private Integer quantity;
+	
 	@Column(length = 360)
 	private String description;
 	

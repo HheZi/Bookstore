@@ -64,10 +64,14 @@ public class UserService implements UserDetailsService{
 	}
 	
 	@Transactional
-	public void saveUser(UserEntity user){	
+	public void registerUser(UserEntity user){	
 		if(userRepository.existsByUsername(user.getUsername()))
 			throw new ResponseException(HttpStatus.CONFLICT, "User already exists");
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		userRepository.save(user);
+	}
+	
+	public void saveUser(UserEntity user) {
 		userRepository.save(user);
 	}
 	
@@ -96,6 +100,8 @@ public class UserService implements UserDetailsService{
 		
 		entity.setEmail(dto.getEmail());			
 		entity.setUsername(dto.getUsername());			
+		
+		
 		imageService.upload(pathToAvatars, dto.getAvatar().getOriginalFilename(),  dto.getAvatar().getInputStream());
 		
 		if(!dto.getAvatar().isEmpty()) {
@@ -114,5 +120,9 @@ public class UserService implements UserDetailsService{
 		getAuthContext().setUserEntity(entity);
 		
 		userRepository.save(entity);
+	}
+	
+	public void deleteAvatar(String name) {
+		imageService.deleteCover(pathToAvatars, name);
 	}
 }

@@ -21,7 +21,7 @@ async function makeRequest(url, method, data = null) {
 
 async function loadAll(page = 0, size = 10, titleFilter = '') {
     try {
-        const response = await makeRequest(`http://localhost:8080/books?page=${page}&size=${size}&titleFilter=${titleFilter}`, "GET");
+        const response = await makeRequest(`http://localhost:8080/api/books?page=${page}&size=${size}&titleFilter=${titleFilter}`, "GET");
         const res = await response.json();
 
         updatePage(res.content);
@@ -51,13 +51,14 @@ function updatePage(books) {
 
         bookDiv.innerHTML = `
             <div class='book-cover'>
-                <a href="/seeBook/${book.id}" class="bookSrc">
+                <a href="/books/${book.id}" class="bookSrc">
                     <img src='${book.coverUrl}' alt='Обложка книги'>
                 </a>
             </div>
             <div class='book-info'>
                 <h2>${book.title}</h2>
                 <p>Автор: ${book.author}</p>
+                <p>Количество: ${book.quantity}</p>
                 <p class='price'>Цена: ${book.price.toFixed(2)} грн.</p>
                 <button onClick="addToCart(${book.id})">Добавить в корзину</button>
             </div>

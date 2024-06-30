@@ -1,5 +1,6 @@
 package com.bookstore.service;
 
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -50,8 +51,8 @@ public class BookService {
 	}
 	
 	@Transactional(readOnly = true)
-	public List<Book> findAllbyUser(Integer id){ 
-		return bookRepository.findByUser(id);
+	public List<Book> findAllbyUser(Integer userId){ 
+		return bookRepository.findByUser(userId);
 	}
 	
 	@Transactional
@@ -67,7 +68,7 @@ public class BookService {
 	}
 	
 	@SneakyThrows
-	public void uploadImage(MultipartFile image) {
+	public void uploadImage(MultipartFile image){
 		imageService.upload(pathToCovers, image.getOriginalFilename(), image.getInputStream());
 	}
 	
@@ -77,6 +78,10 @@ public class BookService {
 				.orElseThrow(() -> new ResponseException(HttpStatus.NOT_FOUND, "User not found"));
 		entity.addBookToCart(book);
 		bookRepository.save(book);
+	}
+	
+	public void deleteCover(Book book) {
+		imageService.deleteCover(pathToCovers, book.getCover());
 	}
 	
 	@Transactional
@@ -90,6 +95,6 @@ public class BookService {
 
 		bookRepository.delete(book);
 		
-		imageService.deleteCover(pathToCovers, book.getCover());
+		deleteCover(book);
 	}
 }

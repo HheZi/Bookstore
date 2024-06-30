@@ -16,11 +16,11 @@ function toggleDropdown() {
         }
 
 
-	 fetch("http://localhost:8080/users/auth", {method: "GET"})
+	 fetch("http://localhost:8080/api/users/auth", {method: "GET"})
 	 .then(response => response.json()) 
 	 .then(user => {
 		userAuth = user;
-		document.querySelector("#profile").href = `../seeUser?user=${user.id}`
+		document.querySelector("#profile").href = `../profile?user=${user.id}`
 		document.querySelector("#books").href = `../userBooks?user=${user.id}`;
 		document.querySelector("#avatarAuth").src = user.avatarUrl;
 		document.querySelector("#username").innerHTML = user.username;

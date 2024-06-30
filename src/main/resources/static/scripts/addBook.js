@@ -7,7 +7,7 @@ document.getElementById('formPost').addEventListener('submit', async function(ev
     const formData = new FormData(form);
     
     try {
-        const response = await fetch('http://localhost:8080/books', {
+        const response = await fetch('http://localhost:8080/api/books', {
             method: 'POST',
             body: formData
         });

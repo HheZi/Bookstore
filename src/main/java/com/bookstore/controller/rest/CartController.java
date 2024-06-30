@@ -23,7 +23,7 @@ import com.bookstore.mapper.BookMapper;
 import com.bookstore.service.CartService;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/api/cart")
 public class CartController {
 	
 	@Autowired

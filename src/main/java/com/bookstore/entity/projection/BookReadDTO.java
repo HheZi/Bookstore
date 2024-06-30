@@ -33,6 +33,8 @@ public class BookReadDTO {
 	
 	private Float price; 
 	
+	private Integer quantity;
+	
 	private LocalDate dateOfPublishing;
 	
 	private UserReadDTO user;

@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/seeUser")
-public class SeeUser {
+@RequestMapping("/profile")
+public class ProlileController {
 	
 	@GetMapping
-	public String seeUser() {
-		return "seeUser";
+	public String profile() {
+		return "profile";
 	}
 	
 }

@@ -5,7 +5,7 @@ document.querySelector("#reg").addEventListener("click", async function(event){
     const form = new FormData(document.querySelector("#registerForm"));
 
     try {
-        const response = await fetch("http://localhost:8080/users/reg", {
+        const response = await fetch("http://localhost:8080/api/users/reg", {
             method: "POST",
             body: form
         });
