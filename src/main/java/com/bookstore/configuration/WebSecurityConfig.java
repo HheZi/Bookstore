@@ -31,7 +31,7 @@ public class WebSecurityConfig {
 				)
 			.formLogin(login -> login
 					.loginPage("/login")
-					.defaultSuccessUrl("/")
+					.defaultSuccessUrl("/home", true)
 				)
 			.logout(withDefaults());
 		return httpSecurity.build();

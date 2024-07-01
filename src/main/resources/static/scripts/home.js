@@ -71,7 +71,7 @@ function updatePage(books) {
 async function addToCart(id) {
     try {
         await makeRequest(`http://localhost:8080/cart/${id}/${userAuth.id}`, "POST");
-        showNotification("Книга добалена в корзину!", "success")
+        showNotification("Книга добавлена в корзину!", "success")
     } catch (error) {
         showNotification(error.message || 'Ошибка при добавлении книги в корзину', 'error');
     }
@@ -105,9 +105,17 @@ function updatePagination(pageable, totalPages, titleFilter = '') {
     }
 }
 
-document.addEventListener("DOMContentLoaded", () => loadAll());
-
-document.getElementById('searchButton').addEventListener('click', () => {
-    const titleFilter = document.getElementById('searchInput').value;
+document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const titleFilter = params.get('titleFilter') || '';
+    document.getElementById('searchInput').value = titleFilter;
     loadAll(0, 10, titleFilter);
+});
+
+document.getElementById('searchInput').addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        const titleFilter = event.target.value;
+        window.location.href = `../home?titleFilter=${encodeURIComponent(titleFilter)}`;
+    }
 });

@@ -80,8 +80,8 @@ public class BookService {
 		bookRepository.save(book);
 	}
 	
-	public void deleteCover(Book book) {
-		imageService.deleteCover(pathToCovers, book.getCover());
+	public void deleteCover(String imageName) {
+		imageService.deleteCover(pathToCovers, imageName);
 	}
 	
 	@Transactional
@@ -95,6 +95,6 @@ public class BookService {
 
 		bookRepository.delete(book);
 		
-		deleteCover(book);
+		deleteCover(book.getCover());
 	}
 }

@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import lombok.SneakyThrows;
@@ -15,6 +16,7 @@ import lombok.SneakyThrows;
 public class ImageService {
 	
 	@SneakyThrows
+	@Async
 	public void upload(String pathToimageFolder, String fileName, InputStream content) {
 		if(fileName != null && !fileName.isEmpty()) {
 			File file = new File(pathToimageFolder, fileName);
@@ -36,6 +38,7 @@ public class ImageService {
 	}
 	
 	@SneakyThrows
+	@Async
 	public void deleteCover(String pathToimageFolder, String fileName) {
 		if(fileName != null && !fileName.isEmpty())
 			Files.delete(Path.of(pathToimageFolder, fileName));

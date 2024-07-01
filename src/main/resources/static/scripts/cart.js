@@ -56,14 +56,24 @@ async function removeFromCart(id) {
     loadCart();
 }
 
+async function checkout(){
+	const form = new FormData(document.getElementById("shippingForm"));
+	await makeRequest("http://localhost:8080/api/users/checkout", "POST", false, form);
+	notification("Check your email!", "success")
+}
+
+function notification(message, type){
+		const notification = document.getElementById('notification');
+		
+		notification.textContent = '';	
+		
+	 	notification.className = `notification ${type}`;
+        notification.textContent = message;		
+        notification.style.display = 'block';
+	}
+
+
 document.addEventListener("DOMContentLoaded", () => {
     loadCart();
-    document.getElementById("checkoutButton").addEventListener("click", async () => {
-        try {
-            alert("Заказ успешно оформлен!");
-            loadCart();
-        } catch (error) {
-            console.error("Ошибка при оформлении заказа:", error);
-        }
-    });
+    document.getElementById("checkoutButton").addEventListener("click",  () => checkout());
 });

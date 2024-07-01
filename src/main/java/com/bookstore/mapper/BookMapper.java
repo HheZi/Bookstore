@@ -48,7 +48,7 @@ public class BookMapper {
 	public Book updateBookUsingWriteDto(Book book, BookWriteDTO dto) {
 		book.setTitle(dto.getTitle());
 		book.setAuthor(dto.getAuthor());
-		book.setCover(dto.getCover().getOriginalFilename());
+		book.setCover(!dto.getCover().isEmpty() ? dto.getCover().getOriginalFilename() : book.getCover());
 		book.setDateOfPublishing(dto.getDateOfPublishing());
 		book.setDescription(dto.getDescription());
 		book.setGenre(dto.getGenre());

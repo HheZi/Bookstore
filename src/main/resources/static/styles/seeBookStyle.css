@@ -44,7 +44,7 @@ body {
 
 .book-info {
     width: 100%;
-    padding: 20px;
+    padding: 30px;
     background-color: #f9f9f9;
     border-radius: 10px;
     text-align: center;
@@ -64,6 +64,13 @@ body {
 .book-info .book-price {
     font-weight: bold;
     color: #333;
+}
+
+.book-info .book-description {
+    word-wrap: break-word; 
+    white-space: pre-line; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
 }
 
 .book-info a{

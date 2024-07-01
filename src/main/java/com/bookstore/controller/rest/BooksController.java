@@ -41,6 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/books")
+@Slf4j
 public class BooksController {
 	
 	@Autowired
@@ -101,9 +102,14 @@ public class BooksController {
 		
 		bookService.saveBook(bookMapper.updateBookUsingWriteDto(book, dto));
 		
-		bookService.deleteCover(book);
+		if (!dto.getCover().isEmpty()) {
+			
+			log.warn("cover dto is {}", dto.getCover());
+			bookService.deleteCover(book.getCover());
+			
+			bookService.uploadImage(dto.getCover());			
+		}
 		
-		bookService.uploadImage(dto.getCover());
 		
 		return ResponseEntity.ok().build();
 	}

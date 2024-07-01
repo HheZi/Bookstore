@@ -40,7 +40,7 @@ function updateInfo(book) {
             <p class="book-pages">Количество страниц: ${book.numbersOfPages}</p>
             <p>Количество: ${book.quantity}</p>
             <p class="book-publishing-date">Дата публикации: ${book.dateOfPublishing}</p>
-            <p class="book-description">Описание: ${book.description}</p>
+            <p class="book-description">Описание: ${book.description || ""}</p>
             <p><a class="book-user" href="../profile?user=${book.user.id}">Пользователь: ${book.user.username}</a></p>
             <button class="add-to-cart" onclick="addToCart(${book.id}, userAuth)">Добавить в корзину</button>
         </div>

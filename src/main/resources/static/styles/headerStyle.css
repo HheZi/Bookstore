@@ -27,6 +27,19 @@
     margin: 0;
 }
 
+.search-container {
+    flex: 2;
+    text-align: center;
+}
+
+.search-container input {
+    width: 50%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
 nav {
     margin-right: 20px;
 }

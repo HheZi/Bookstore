@@ -27,3 +27,15 @@ function toggleDropdown() {
 		document.querySelector("#cart").href = `../seeCart?user=${user.id}`
 	 });
 
+    
+    document.getElementById('searchInput').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                const titleFilter = event.target.value;
+                window.location.href = `../home?titleFilter=${encodeURIComponent(titleFilter)}`;
+            }
+        });
+document.addEventListener("DOMContentLoaded", () =>{
+	const titleFilter = new URLSearchParams(document.location.search).get("titleFilter") || ""
+	document.getElementById('searchInput').value = titleFilter;
+})
