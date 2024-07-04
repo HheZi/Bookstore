@@ -24,7 +24,7 @@ function toggleDropdown() {
 		document.querySelector("#books").href = `../userBooks?user=${user.id}`;
 		document.querySelector("#avatarAuth").src = user.avatarUrl;
 		document.querySelector("#username").innerHTML = user.username;
-		document.querySelector("#cart").href = `../seeCart?user=${user.id}`
+		document.querySelector("#cart").href = `../cart?user=${user.id}`
 	 });
 
     

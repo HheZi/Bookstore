@@ -66,7 +66,7 @@ public class UserService implements UserDetailsService{
 	@Transactional
 	public void registerUser(UserEntity user){	
 		if(userRepository.existsByUsername(user.getUsername()))
-			throw new ResponseException(HttpStatus.CONFLICT, "User already exists");
+			throw new ResponseException(HttpStatus.CONFLICT, "User with the same usernmae already exists");
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		userRepository.save(user);
 	}
@@ -82,14 +82,16 @@ public class UserService implements UserDetailsService{
 		return imageService.getImage(pathToAvatars, avatar, defaultAvatar);
 	}
 	
-	public SecurityUserDetails getAuthContext() {
-		return ((SecurityUserDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal());
-	}
-	
 	@Transactional(readOnly = true)
 	public Optional<UserEntity> findByUsername(String username) {
 		return userRepository.findByUsername(username);
+	}
+	
+	public boolean isUserHasAccess(Integer id) {
+		UserEntity auth = ((SecurityUserDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).getUserEntity();
+		
+		return id == auth.getId(); 
 	}
 	
 	@Transactional
@@ -117,7 +119,8 @@ public class UserService implements UserDetailsService{
 			
 		}
 		
-		getAuthContext().setUserEntity(entity);
+		((SecurityUserDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).setUserEntity(entity);
 		
 		userRepository.save(entity);
 	}

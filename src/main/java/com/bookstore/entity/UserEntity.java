@@ -63,7 +63,7 @@ public class UserEntity extends BaseAudit{
 	@Default
 	private Role role = Role.USER;
 
-	@ManyToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+	@ManyToMany(cascade = {CascadeType.MERGE})
 	@JoinTable(name = "cart",
 			joinColumns = @JoinColumn(name = "user_id"),
 			inverseJoinColumns = @JoinColumn(name = "book_id"))

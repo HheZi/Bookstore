@@ -1,5 +1,6 @@
 package com.bookstore.controller.rest;
 
+import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
@@ -7,11 +8,13 @@ import static org.springframework.http.ResponseEntity.status;
 import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Role;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -31,6 +34,7 @@ import com.bookstore.entity.projection.UserReadDTO;
 import com.bookstore.entity.projection.UserWriteDTO;
 import com.bookstore.exception.ResponseException;
 import com.bookstore.mapper.UserMapper;
+import com.bookstore.security.SecurityUserDetails;
 import com.bookstore.service.EmailService;
 import com.bookstore.service.UserService;
 
@@ -58,7 +62,8 @@ public class UsersController {
 
 	@GetMapping("/auth")
 	public UserReadDTO getAuth() {
-		return userMapper.userToUserReadDto(userService.getAuthContext().getUserEntity());
+		return userMapper.userToUserReadDto(((SecurityUserDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).getUserEntity());
 	}
 
 	@GetMapping("/{id}/avatar")
@@ -67,9 +72,9 @@ public class UsersController {
 	}
 
 	@PostMapping("/reg")
-	public ResponseEntity<?> registrUser(@RequestBody @Validated UserWriteDTO dto, BindingResult br) {
+	public ResponseEntity<?> registrUser(@ModelAttribute @Validated UserWriteDTO dto, BindingResult br) {
 		if (br.hasErrors()) {
-			throw new ResponseException(HttpStatus.NOT_ACCEPTABLE, br.getFieldError().getDefaultMessage());
+			throw new ResponseException(NOT_ACCEPTABLE, br.getFieldError().getDefaultMessage());
 		}
 		userService.registerUser(userMapper.userWriteDtoToUser(dto));
 
@@ -77,10 +82,11 @@ public class UsersController {
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<?> updateUser(@RequestBody  @Validated UserWriteDTO dto, BindingResult br,
-			@PathVariable("id") Integer id) {
+	@PreAuthorize("@userService.isUserHasAccess(#id)")
+	public ResponseEntity<?> updateUser(@ModelAttribute  @Validated UserWriteDTO dto, BindingResult br,
+			@PathVariable("id") @Param("id")  Integer id) {
 		if (br.hasErrors()) {
-			throw new ResponseException(HttpStatus.NOT_ACCEPTABLE, br.getFieldError().getDefaultMessage());
+			throw new ResponseException(NOT_ACCEPTABLE, br.getFieldError().getDefaultMessage());
 		}
 
 		userService.updateUser(id, dto);
@@ -88,7 +94,8 @@ public class UsersController {
 	}
 
 	@DeleteMapping("{id}/avatar")
-	public void deleteAvatar(@PathVariable("id") Integer id) {
+	@PreAuthorize("@userService.isUserHasAccess(#id)")
+	public void deleteAvatar(@PathVariable("id") @Param("id") Integer id) {
 		UserEntity entity = userService.getOne(id)
 				.orElseThrow(() -> new ResponseException(NOT_FOUND, "The user is not found"));
 		entity.setAvatar("");
@@ -99,12 +106,10 @@ public class UsersController {
 	@PostMapping("/checkout")
 	public ResponseEntity<?> sendCheckoutByEmail(@RequestBody String fullName, @RequestBody String address,
 			@RequestBody String phoneNumber) {
-		UserEntity entity = userService.getAuthContext().getUserEntity();
+		UserEntity entity = ((SecurityUserDetails) SecurityContextHolder.getContext()
+				.getAuthentication().getPrincipal()).getUserEntity();
 
-		String text = "%s, the parcel will arrive at address %s addressed to %s.%nHappy reading!"
-				.formatted(entity.getUsername(), address, fullName);
-
-		emailService.sendEmail(entity.getEmail(), "Purchase Order", text);
+		emailService.sendCheckout(entity.getEmail(), entity.getUsername(), address, fullName);
 
 		return ok().build();
 	}

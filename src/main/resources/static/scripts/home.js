@@ -51,7 +51,7 @@ function updatePage(books) {
 
         bookDiv.innerHTML = `
             <div class='book-cover'>
-                <a href="/books/${book.id}" class="bookSrc">
+                <a href="../books/${book.id}" class="bookSrc">
                     <img src='${book.coverUrl}' alt='Обложка книги'>
                 </a>
             </div>
@@ -70,7 +70,7 @@ function updatePage(books) {
 
 async function addToCart(id) {
     try {
-        await makeRequest(`http://localhost:8080/cart/${id}/${userAuth.id}`, "POST");
+        await makeRequest(`http://localhost:8080/api/cart/${id}/${userAuth.id}`, "POST");
         showNotification("Книга добавлена в корзину!", "success")
     } catch (error) {
         showNotification(error.message || 'Ошибка при добавлении книги в корзину', 'error');

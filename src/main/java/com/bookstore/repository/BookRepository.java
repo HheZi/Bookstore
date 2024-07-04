@@ -21,7 +21,7 @@ import com.bookstore.entity.projection.UserReadDTO;
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>{
 	
-	@EntityGraph(attributePaths = "createdBy")
+	@EntityGraph(attributePaths = {"createdBy", "genre"})
 	@Query("from Book b where b.id = :id")
 	public Optional<Book> findByIdWithCreatedBy(@Param("id") Long id);
 	
@@ -29,6 +29,7 @@ public interface BookRepository extends JpaRepository<Book, Long>{
 	@Query("from Book b where b.id = :id")
 	public Optional<Book> findByIdWithUsersInCart(@Param("id") Long id);
 	
+	@EntityGraph(attributePaths = "genre")
 	public Optional<Book> findById(Long id);
 	
 	public Page<Book> findByTitleContainingIgnoreCase(String formatName, Pageable size);
@@ -38,5 +39,9 @@ public interface BookRepository extends JpaRepository<Book, Long>{
 	
 	@Query("from Book b where b.createdBy.id = :id")
 	@EntityGraph(attributePaths = "createdBy")
+	
 	public List<Book> findByUser(@Param("id") Integer id);
+	
+	@Query(value = "select b.created_by from books b where b.id = :id", nativeQuery = true)
+	public Optional<Integer> findByIdReturningCreatedById(@Param("id") Long id);
 }

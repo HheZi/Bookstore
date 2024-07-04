@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", function() {
             });
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.detail || 'Error updating book');
+                throw new Error(errorData.detail || errorData.status);
             }
            	loadBookDetails(bookId)
             notification('Book updated successfully!', "success")
@@ -35,11 +35,10 @@ document.addEventListener("DOMContentLoaded", function() {
 				const json = await response.json(); 
                 throw new Error(json.detail);
             }
-   
             const book = await response.json();
             if(book.user.id !== userAuth.id){
-				document.querySelector("#updateBookForm").style.display = "none";
-				throw new Error("You don't have an access to upgrade this book");
+				document.querySelector("#updateBookForm").style.display = 'none';
+				throw new Error("You do not have sufficient rights to update the book");
 			}
             
             document.getElementById('coverImg').src = book.coverUrl;

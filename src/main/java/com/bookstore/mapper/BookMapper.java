@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.bookstore.entity.Book;
+import com.bookstore.entity.Genre;
 import com.bookstore.entity.projection.BookReadDTO;
 import com.bookstore.entity.projection.BookWriteDTO;
+import com.bookstore.service.GenreService;
 
 @Component
 public class BookMapper {
@@ -13,11 +15,14 @@ public class BookMapper {
 	@Autowired
 	private UserMapper userMapper;
 	
+	@Autowired
+	private GenreService genreService;
+	
 	public Book bookWriteDtoToBook(BookWriteDTO dto) {
 		return Book.builder()
 				.title(dto.getTitle())
 				.author(dto.getAuthor())
-				.genre(dto.getGenre())
+				.genre(genreService.findByName(dto.getGenre()))
 				.dateOfPublishing(dto.getDateOfPublishing())
 				.description(dto.getDescription())
 				.language(dto.getLanguage())
@@ -28,14 +33,14 @@ public class BookMapper {
 				.build();
 	}
 	
-	public BookReadDTO bookToBookReadDTO(Book book, boolean userOptional) {
+	public BookReadDTO bookToBookReadDTO(Book book, boolean userOptional, boolean genreOptional) {
 		return BookReadDTO.builder()
 				.id(book.getId())
 				.title(book.getTitle())
 				.author(book.getAuthor())
 				.price(book.getPrice())
 				.description(book.getDescription())
-				.genre(book.getGenre())
+				.genre(genreOptional ? book.getGenre().getName() : null)
 				.language(book.getLanguage())
 				.numbersOfPages(book.getNumbersOfPages())
 				.user(userOptional ? userMapper.userToUserReadDto(book.getCreatedBy()) : null)
@@ -51,7 +56,7 @@ public class BookMapper {
 		book.setCover(!dto.getCover().isEmpty() ? dto.getCover().getOriginalFilename() : book.getCover());
 		book.setDateOfPublishing(dto.getDateOfPublishing());
 		book.setDescription(dto.getDescription());
-		book.setGenre(dto.getGenre());
+		book.setGenre(genreService.findByName(dto.getGenre()));
 		book.setLanguage(dto.getLanguage());
 		book.setNumbersOfPages(dto.getNumbersOfPages());
 		book.setPrice(dto.getPrice());

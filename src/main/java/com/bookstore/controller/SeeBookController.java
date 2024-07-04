@@ -1,18 +1,28 @@
 package com.bookstore.controller;
 
+import java.util.List;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.bookstore.entity.enums.Genre;
+import com.bookstore.entity.Genre;
 import com.bookstore.entity.enums.Language;
+import com.bookstore.service.GenreService;
 
 @Controller
 @RequestMapping("/books")
 public class SeeBookController {
 	
-	private Genre[] genres = Genre.values();
+	private List<String> genres;
+	
+	public SeeBookController(GenreService genreService) {
+		this.genres = genreService.findAll()
+				.stream()
+				.map(Genre::getName)
+				.toList(); 
+	}
 	
 	private Language[] languages = Language.values();
 	

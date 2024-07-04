@@ -5,8 +5,8 @@ import java.time.LocalDate;
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.bookstore.entity.Genre;
 import com.bookstore.entity.UserEntity;
-import com.bookstore.entity.enums.Genre;
 import com.bookstore.entity.enums.Language;
 
 import jakarta.annotation.Nullable;
@@ -36,7 +36,7 @@ public class BookWriteDTO {
 	private String author;
 	
 	@NotNull(message = "Genre is required")
-	private Genre genre;
+	private String genre;
 	
 	@NotNull(message = "Language is required")
 	private Language language;

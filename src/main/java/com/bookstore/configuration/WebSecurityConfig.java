@@ -18,6 +18,7 @@ import com.bookstore.service.UserService;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class WebSecurityConfig {
 
 	@Bean
@@ -33,7 +34,8 @@ public class WebSecurityConfig {
 					.loginPage("/login")
 					.defaultSuccessUrl("/home", true)
 				)
-			.logout(withDefaults());
+			.logout(withDefaults())
+			.httpBasic(withDefaults());
 		return httpSecurity.build();
 	}
 	

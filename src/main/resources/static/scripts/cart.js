@@ -1,4 +1,4 @@
-async function makeRequest(url, method, optional, data = null) {
+async function makeRequest(url, method, data = null) {
     const req = {
         method: method,
         headers: {
@@ -11,19 +11,22 @@ async function makeRequest(url, method, optional, data = null) {
     }
 
     const response = await fetch(url, req);
-    if(optional)
-    	return response.json();
+    return response;
 }
 
 async function loadCart() {
 	const params = new URLSearchParams(document.location.search);
 	const user = params.get("user");
-    try {
-        const cart = await makeRequest(`http://localhost:8080/api/cart/${user}`, "GET", true);
-        updateCart(cart);
-    } catch (error) {
-        console.error("Error loading cart:", error);
+
+    const res = await makeRequest(`http://localhost:8080/api/cart/${user}`, "GET");
+    if(!res.ok){
+    	const error = await res.json();
+        notification(error.detail, error.status, "error");
+        return;
     }
+    const cart = await res.json();
+    updateCart(cart);
+
 }
 
 function updateCart(cart) {
@@ -36,7 +39,7 @@ function updateCart(cart) {
         const row = document.createElement("tr");
 
         row.innerHTML = `
-            <td><a href="../seeBook/${item.id}"><img src="http://localhost:8080${item.coverUrl}" alt="Cover" class="cover"></a></td>
+            <td><a href="../books/${item.id}"><img src="${item.coverUrl}" alt="Cover" class="cover"></a></td>
             <td>${item.title}</td>
             <td>${item.author}</td>
             <td>${item.price.toFixed(2)} грн.</td>
@@ -57,15 +60,21 @@ async function removeFromCart(id) {
 }
 
 async function checkout(){
-	const form = new FormData(document.getElementById("shippingForm"));
-	await makeRequest("http://localhost:8080/api/users/checkout", "POST", false, form);
-	notification("Check your email!", "success")
+	document.getElementById("shippingForm").addEventListener("submit", async (event) => {
+		event.preventDefault();
+		const form = new FormData(document.getElementById("shippingForm"));
+		await makeRequest("http://localhost:8080/api/users/checkout", "POST", false, form);
+		notification("Check your email!", "success")
+	})
 }
 
-function notification(message, type){
+function notification(message, status, type){
 		const notification = document.getElementById('notification');
 		
 		notification.textContent = '';	
+		
+		if(status === 403)
+			document.querySelector(".cart-container").style.display = 'none';
 		
 	 	notification.className = `notification ${type}`;
         notification.textContent = message;		

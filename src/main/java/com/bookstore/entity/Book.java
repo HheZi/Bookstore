@@ -3,9 +3,12 @@ package com.bookstore.entity;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.bookstore.entity.audit.BaseAudit;
 import com.bookstore.entity.audit.BookAudit;
-import com.bookstore.entity.enums.Genre;
 import com.bookstore.entity.enums.Language;
 
 import jakarta.persistence.CascadeType;
@@ -52,12 +55,11 @@ public class Book extends BookAudit{
 	@Column(length = 45)
 	private String author;
 	
-	@Column(length = 20)
-	@Enumerated(EnumType.STRING)
+	@ManyToOne(fetch = FetchType.LAZY)
 	private Genre genre;
 	
-	@Enumerated(EnumType.STRING)
 	@Column(length = 2)
+	@Enumerated(EnumType.STRING)
 	private Language language;
 	
 	@Column(name = "numbers_of_pages")
@@ -77,7 +79,7 @@ public class Book extends BookAudit{
 	@Exclude
 	private String cover;
 	
-	@ManyToMany(mappedBy = "booksInCart", cascade = {CascadeType.MERGE, CascadeType.REMOVE})
+	@ManyToMany(mappedBy = "booksInCart", cascade = {CascadeType.MERGE})
 	@Exclude
 	@ToString.Exclude
 	private List<UserEntity> usersInCart;

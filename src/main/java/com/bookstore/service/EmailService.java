@@ -12,8 +12,12 @@ public class EmailService {
 	@Autowired
 	private JavaMailSender mailSender;
 	
+	private final String TEXT_CHECKOUT = "%s, the parcel will arrive at address %s addressed to %s.%nHappy reading!";
+	
+	private final String CHECKOUT_SUBJECT = "Purchase Order";
+	
 	@Async
-	public void sendEmail(String to, String subject, String text) {
+	private void sendEmail(String to, String subject, String text) {
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		
 		mailMessage.setTo(to);
@@ -23,5 +27,8 @@ public class EmailService {
 		mailSender.send(mailMessage);
 	}
 	
+	public void sendCheckout(String to, String username, String address, String fullname) {
+		sendEmail(to, CHECKOUT_SUBJECT, TEXT_CHECKOUT.formatted(username, address, fullname));
+	}
 	
 }

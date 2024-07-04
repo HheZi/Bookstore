@@ -2,8 +2,8 @@ package com.bookstore.entity.projection;
 
 import java.time.LocalDate;
 
+import com.bookstore.entity.Genre;
 import com.bookstore.entity.UserEntity;
-import com.bookstore.entity.enums.Genre;
 import com.bookstore.entity.enums.Language;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
@@ -23,7 +23,7 @@ public class BookReadDTO {
 	
 	private String coverUrl;
 	
-	private Genre genre;
+	private String genre;
 
 	private Language language;
 	

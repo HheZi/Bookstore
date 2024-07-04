@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -35,13 +37,13 @@ import com.bookstore.exception.ResponseException;
 import com.bookstore.mapper.BookMapper;
 import com.bookstore.security.SecurityUserDetails;
 import com.bookstore.service.BookService;
+import com.bookstore.service.GenreService;
 
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/books")
-@Slf4j
 public class BooksController {
 	
 	@Autowired
@@ -57,13 +59,15 @@ public class BooksController {
 		 
 		Pageable pageable = PageRequest.of(page, size);
 		
-		return bookService.getAll(pageable, titleFilter).map(b -> bookMapper.bookToBookReadDTO(b, false));
+		return bookService
+				.getAll(pageable, titleFilter)
+				.map(b -> bookMapper.bookToBookReadDTO(b, false, false));
 	}
 	
 	@GetMapping("/{id}")
 	public BookReadDTO getOne(@PathVariable("id") Long id)  {
 		return bookService.findById(id)
-				.map(b -> bookMapper.bookToBookReadDTO(b, true))
+				.map(b -> bookMapper.bookToBookReadDTO(b, true, true))
 				.orElseThrow(() -> new ResponseException(HttpStatus.NOT_FOUND, "Book is not found"));
 	}
 	
@@ -71,7 +75,7 @@ public class BooksController {
 	public List<BookReadDTO> getAllByUserId(@PathVariable("userId") Integer userId){
 		return bookService.findAllbyUser(userId)
 		.stream()
-		.map(b -> bookMapper.bookToBookReadDTO(b, false))
+		.map(b -> bookMapper.bookToBookReadDTO(b, false, false))
 		.toList();
 	}
 	
@@ -91,8 +95,9 @@ public class BooksController {
 	}
 	
 	@PutMapping("/{id}")
+	@PreAuthorize("@bookService.isUserHasAccessToBook(#id)")
 	public ResponseEntity<?> updateBook(@ModelAttribute @Validated BookWriteDTO dto, BindingResult br,
-										@PathVariable("id") Long id){
+										@PathVariable("id") @Param("id") Long id){
 		if (br.hasErrors()) {
 			throw new ResponseException(HttpStatus.NOT_ACCEPTABLE, br.getFieldError().getDefaultMessage());
 		}		
@@ -100,22 +105,21 @@ public class BooksController {
 		Book book = bookService.findById(id)
 		.orElseThrow(() -> new ResponseException(HttpStatus.NOT_FOUND, "The book is not found"));		
 		
-		bookService.saveBook(bookMapper.updateBookUsingWriteDto(book, dto));
-		
 		if (!dto.getCover().isEmpty()) {
 			
-			log.warn("cover dto is {}", dto.getCover());
 			bookService.deleteCover(book.getCover());
 			
 			bookService.uploadImage(dto.getCover());			
 		}
 		
+		bookService.saveBook(bookMapper.updateBookUsingWriteDto(book, dto));
 		
 		return ResponseEntity.ok().build();
 	}
 	
 	@DeleteMapping("/{id}")
-	public void deleteBook(@PathVariable("id") Long id) {
-		bookService.deleteBookById(id);
+	@PreAuthorize("@bookService.isUserHasAccessToBook(#id)")
+	public void deleteBook(@PathVariable("id") @Param("id") Long id) {
+		bookService.deleteBook(id);
 	}
 }
