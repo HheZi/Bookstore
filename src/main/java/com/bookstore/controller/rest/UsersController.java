@@ -29,11 +29,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.bookstore.entity.UserEntity;
-import com.bookstore.entity.projection.UserReadDTO;
-import com.bookstore.entity.projection.UserWriteDTO;
 import com.bookstore.exception.ResponseException;
 import com.bookstore.mapper.UserMapper;
+import com.bookstore.model.entity.Book;
+import com.bookstore.model.entity.UserEntity;
+import com.bookstore.model.projection.UserReadDTO;
+import com.bookstore.model.projection.UserWriteDTO;
 import com.bookstore.security.SecurityUserDetails;
 import com.bookstore.service.EmailService;
 import com.bookstore.service.UserService;
@@ -51,9 +52,6 @@ public class UsersController {
 	@Autowired
 	private UserMapper userMapper;
 
-	@Autowired
-	private EmailService emailService;
-
 	@GetMapping("/{id}")
 	public UserReadDTO getOne(@PathVariable("id") Integer id) {
 		return userService.getOne(id).map(userMapper::userToUserReadDto)
@@ -62,8 +60,7 @@ public class UsersController {
 
 	@GetMapping("/auth")
 	public UserReadDTO getAuth() {
-		return userMapper.userToUserReadDto(((SecurityUserDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).getUserEntity());
+		return userMapper.userToUserReadDto(SecurityUserDetails.getAuthUser());
 	}
 
 	@GetMapping("/{id}/avatar")
@@ -98,19 +95,9 @@ public class UsersController {
 	public void deleteAvatar(@PathVariable("id") @Param("id") Integer id) {
 		UserEntity entity = userService.getOne(id)
 				.orElseThrow(() -> new ResponseException(NOT_FOUND, "The user is not found"));
-		entity.setAvatar("");
 		userService.deleteAvatar(entity.getAvatar());
+		
+		entity.setAvatar("");
 		userService.saveUser(entity);
-	}
-
-	@PostMapping("/checkout")
-	public ResponseEntity<?> sendCheckoutByEmail(@RequestBody String fullName, @RequestBody String address,
-			@RequestBody String phoneNumber) {
-		UserEntity entity = ((SecurityUserDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).getUserEntity();
-
-		emailService.sendCheckout(entity.getEmail(), entity.getUsername(), address, fullName);
-
-		return ok().build();
 	}
 }

@@ -7,8 +7,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.bookstore.entity.Genre;
-import com.bookstore.entity.enums.Language;
+import com.bookstore.model.entity.Genre;
+import com.bookstore.model.enums.Language;
 import com.bookstore.service.GenreService;
 
 @Controller

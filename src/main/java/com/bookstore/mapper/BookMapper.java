@@ -3,10 +3,10 @@ package com.bookstore.mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.bookstore.entity.Book;
-import com.bookstore.entity.Genre;
-import com.bookstore.entity.projection.BookReadDTO;
-import com.bookstore.entity.projection.BookWriteDTO;
+import com.bookstore.model.entity.Book;
+import com.bookstore.model.entity.Genre;
+import com.bookstore.model.projection.BookReadDTO;
+import com.bookstore.model.projection.BookWriteDTO;
 import com.bookstore.service.GenreService;
 
 @Component
@@ -17,6 +17,8 @@ public class BookMapper {
 	
 	@Autowired
 	private GenreService genreService;
+	
+	private final static String COVER_URL = "../api/books/%d/cover";
 	
 	public Book bookWriteDtoToBook(BookWriteDTO dto) {
 		return Book.builder()
@@ -33,7 +35,7 @@ public class BookMapper {
 				.build();
 	}
 	
-	public BookReadDTO bookToBookReadDTO(Book book, boolean userOptional, boolean genreOptional) {
+	public BookReadDTO bookToBookReadDTO(Book book, boolean createdByOptional, boolean genreOptional) {
 		return BookReadDTO.builder()
 				.id(book.getId())
 				.title(book.getTitle())
@@ -43,11 +45,15 @@ public class BookMapper {
 				.genre(genreOptional ? book.getGenre().getName() : null)
 				.language(book.getLanguage())
 				.numbersOfPages(book.getNumbersOfPages())
-				.user(userOptional ? userMapper.userToUserReadDto(book.getCreatedBy()) : null)
+				.user(createdByOptional ? userMapper.userToUserReadDto(book.getCreatedBy()) : null)
 				.dateOfPublishing(book.getDateOfPublishing())
 				.quantity(book.getQuantity())
-				.coverUrl("../api/books/%d/cover".formatted(book.getId()))
+				.coverUrl(formatCoverUrl(book))
 				.build();
+	}
+	
+	protected String formatCoverUrl(Book book) {
+		return COVER_URL.formatted(book.getId());
 	}
 	
 	public Book updateBookUsingWriteDto(Book book, BookWriteDTO dto) {

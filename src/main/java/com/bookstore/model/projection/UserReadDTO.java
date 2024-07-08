@@ -1,4 +1,4 @@
-package com.bookstore.entity.projection;
+package com.bookstore.model.projection;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

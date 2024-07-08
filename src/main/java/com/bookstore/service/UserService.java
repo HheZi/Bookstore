@@ -18,9 +18,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.bookstore.entity.UserEntity;
-import com.bookstore.entity.projection.UserWriteDTO;
 import com.bookstore.exception.ResponseException;
+import com.bookstore.model.entity.UserEntity;
+import com.bookstore.model.projection.UserWriteDTO;
 import com.bookstore.repository.UserRepository;
 import com.bookstore.security.SecurityUserDetails;
 
@@ -39,7 +39,7 @@ public class UserService implements UserDetailsService{
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	@Value("${app.image.avatar.default:/Programming/Java//Bookstore/images/avatars/default.png}")
+	@Value("${app.image.avatar.default:/Programming/Java/Bookstore/images/avatars/default.png}")
 	private String defaultAvatar;
 	
 	@Value("${app.image.avatar.path:/Programming/Java/Bookstore/images/avatars}")
@@ -87,13 +87,9 @@ public class UserService implements UserDetailsService{
 		return userRepository.findByUsername(username);
 	}
 	
-	public boolean isUserHasAccess(Integer id) {
-		UserEntity auth = ((SecurityUserDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).getUserEntity();
-		
-		return id == auth.getId(); 
+	public static boolean isUserHasAccess(Integer id) {
+		return id == SecurityUserDetails.getAuthUser().getId(); 
 	}
-	
 	@Transactional
 	@SneakyThrows
 	public void updateUser(Integer id, UserWriteDTO dto) {
@@ -102,7 +98,6 @@ public class UserService implements UserDetailsService{
 		
 		entity.setEmail(dto.getEmail());			
 		entity.setUsername(dto.getUsername());			
-		
 		
 		imageService.upload(pathToAvatars, dto.getAvatar().getOriginalFilename(),  dto.getAvatar().getInputStream());
 		
@@ -119,13 +114,12 @@ public class UserService implements UserDetailsService{
 			
 		}
 		
-		((SecurityUserDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).setUserEntity(entity);
+		SecurityUserDetails.setAuthUser(entity);
 		
 		userRepository.save(entity);
 	}
 	
 	public void deleteAvatar(String name) {
-		imageService.deleteCover(pathToAvatars, name);
+		imageService.deleteImage(pathToAvatars, name);
 	}
 }

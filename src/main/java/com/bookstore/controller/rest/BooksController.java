@@ -29,12 +29,12 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.bookstore.entity.Book;
-import com.bookstore.entity.UserEntity;
-import com.bookstore.entity.projection.BookReadDTO;
-import com.bookstore.entity.projection.BookWriteDTO;
 import com.bookstore.exception.ResponseException;
 import com.bookstore.mapper.BookMapper;
+import com.bookstore.model.entity.Book;
+import com.bookstore.model.entity.UserEntity;
+import com.bookstore.model.projection.BookReadDTO;
+import com.bookstore.model.projection.BookWriteDTO;
 import com.bookstore.security.SecurityUserDetails;
 import com.bookstore.service.BookService;
 import com.bookstore.service.GenreService;
@@ -54,7 +54,7 @@ public class BooksController {
 	
 	@GetMapping
 	public Page<BookReadDTO> getAll(@RequestParam(defaultValue = "0", name = "page") Integer page,
-									@RequestParam(defaultValue = "1", name = "size") Integer size,
+									@RequestParam(defaultValue = "10", name = "size") Integer size,
 									@RequestParam(defaultValue = "", name = "titleFilter") String titleFilter){
 		 
 		Pageable pageable = PageRequest.of(page, size);

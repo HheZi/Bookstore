@@ -8,7 +8,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
-import com.bookstore.entity.UserEntity;
+import com.bookstore.model.entity.UserEntity;
 
 @Component
 public class AuditorAwareImpl implements AuditorAware<UserEntity>{
@@ -21,7 +21,7 @@ public class AuditorAwareImpl implements AuditorAware<UserEntity>{
 				.filter(t -> t.getPrincipal() instanceof SecurityUserDetails)
 				.map(Authentication::getPrincipal)
 				.map(SecurityUserDetails.class::cast)
-				.map(t -> t.getUserEntity());
+				.map(t -> SecurityUserDetails.getAuthUser());
 	}
 
 }

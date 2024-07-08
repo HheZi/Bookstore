@@ -27,22 +27,31 @@ function updateInfo(book) {
     const container = document.createElement("div");
     container.classList.add("book-detail");
 
+	let soldOut = '';
+	let but = `<button class="add-to-cart" onclick="addToCart(${book.id})">Add to cart</button>`;
+	if(book.quantity === 0){
+		but = '';
+		soldOut = "<div class='sold-out-overlay'>Sold out</div>";
+	}
+
     const bookDetailsHTML = `
         <div class="book-cover">
-            <img src="${book.coverUrl}" alt="Обложка книги" class="cover">
+            <img src="${book.coverUrl}" alt="Cover" class="cover">
+            ${soldOut}
         </div>
         <div class="book-info">
             <h2 class="book-title">${book.title}</h2>
-            <p class="book-author">Автор: ${book.author}</p>
-            <p class="book-price">Цена: ${book.price.toFixed(2)} грн.</p>
-            <p class="book-genre">Жанр: ${book.genre}</p>
-            <p class="book-language">Язык: ${book.language}</p>
-            <p class="book-pages">Количество страниц: ${book.numbersOfPages}</p>
-            <p>Количество: ${book.quantity}</p>
-            <p class="book-publishing-date">Дата публикации: ${book.dateOfPublishing}</p>
-            <p class="book-description">Описание: ${book.description || ""}</p>
-            <p><a class="book-user" href="../profile?user=${book.user.id}">Пользователь: ${book.user.username}</a></p>
-            <button class="add-to-cart" onclick="addToCart(${book.id}, userAuth)">Добавить в корзину</button>
+            <p class="book-author">Author: ${book.author}</p>
+            <p class="book-price">Price: ${book.price.toFixed(2)} грн.</p>
+            <p class="book-genre">Genre: ${book.genre}</p>
+            <p class="book-language">Language: ${book.language}</p>
+            <p class="book-pages">Number of pages: ${book.numbersOfPages}</p>
+            <p>Quantity: ${book.quantity}</p>
+            <p class="book-publishing-date">Publication date: ${book.dateOfPublishing || "Not specified"}</p>
+            <p class="book-description">Description: ${book.description || "Not specified"}</p>
+            <a href="../profile?user=${book.user.id}">See profile of creator: ${book.user.username}</a>
+            ${but}
+            
         </div>
     `;
 
@@ -50,10 +59,10 @@ function updateInfo(book) {
     document.querySelector(".container").appendChild(container);
 }
 
-async function addToCart(id, userId) {
+async function addToCart(id) {
     try {
-        await makeRequest(`http://localhost:8080/api/cart/${id}/${userId.id}`, "POST");
-        showNotification('Книга успешно добавлена в корзину!', 'success');
+        await makeRequest(`http://localhost:8080/api/cart/${id}`, "POST");
+        showNotification('Book added to cart!', 'success');
     } catch (error) {
         showNotification(error.message, 'error');
     }

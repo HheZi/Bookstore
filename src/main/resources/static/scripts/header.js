@@ -24,15 +24,17 @@ function toggleDropdown() {
 		document.querySelector("#books").href = `../userBooks?user=${user.id}`;
 		document.querySelector("#avatarAuth").src = user.avatarUrl;
 		document.querySelector("#username").innerHTML = user.username;
-		document.querySelector("#cart").href = `../cart?user=${user.id}`
 	 });
 
     
     document.getElementById('searchInput').addEventListener('keypress', function(event) {
             if (event.key === 'Enter') {
                 event.preventDefault();
+                
                 const titleFilter = event.target.value;
-                window.location.href = `../home?titleFilter=${encodeURIComponent(titleFilter)}`;
+                
+                window.location.href = `../home?titleFilter=${encodeURIComponent(titleFilter)}`;					
+
             }
         });
 document.addEventListener("DOMContentLoaded", () =>{

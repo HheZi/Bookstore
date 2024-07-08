@@ -25,7 +25,7 @@ async function loadAll(page = 0, size = 10, titleFilter = '') {
         const res = await response.json();
 
         updatePage(res.content);
-        updatePagination(res.pageable, res.totalPages, titleFilter);
+        updatePagination(res.page, titleFilter);
     } catch (error) {
         console.error("Error loading books:", error);
     }
@@ -49,18 +49,27 @@ function updatePage(books) {
         const bookDiv = document.createElement("div");
         bookDiv.classList.add("book-block");
 
+        let buttonHTML = `<button onClick="addToCart(${book.id})">Add to cart</button>`;
+        let soldOutOverlay = "";
+
+        if (book.quantity === 0) {
+            buttonHTML = "";
+            soldOutOverlay = `<div class='sold-out-overlay'>Sold out</div>`;
+        }
+
         bookDiv.innerHTML = `
             <div class='book-cover'>
                 <a href="../books/${book.id}" class="bookSrc">
-                    <img src='${book.coverUrl}' alt='Обложка книги'>
+                    <img src='${book.coverUrl}' alt='Book cover'>
+                    ${soldOutOverlay}
                 </a>
             </div>
             <div class='book-info'>
                 <h2>${book.title}</h2>
-                <p>Автор: ${book.author}</p>
-                <p>Количество: ${book.quantity}</p>
-                <p class='price'>Цена: ${book.price.toFixed(2)} грн.</p>
-                <button onClick="addToCart(${book.id})">Добавить в корзину</button>
+                <p>Author: ${book.author}</p>
+                <p>Quantity: ${book.quantity}</p>
+                <p class='price'>Price: ${book.price.toFixed(2)} UA.</p>
+                ${buttonHTML}
             </div>
         `;
 
@@ -70,10 +79,10 @@ function updatePage(books) {
 
 async function addToCart(id) {
     try {
-        await makeRequest(`http://localhost:8080/api/cart/${id}/${userAuth.id}`, "POST");
-        showNotification("Книга добавлена в корзину!", "success")
+        await makeRequest(`http://localhost:8080/api/cart/${id}`, "POST");
+        showNotification("The book has been added to cart!", "success");
     } catch (error) {
-        showNotification(error.message || 'Ошибка при добавлении книги в корзину', 'error');
+        showNotification(error.message || 'Something went wrong', 'error');
     }
 }
 
@@ -89,17 +98,20 @@ function showNotification(message, type) {
     }, 5000);
 }
 
-function updatePagination(pageable, totalPages, titleFilter = '') {
+function updatePagination(page, titleFilter = '') {
     const paginationContainer = document.querySelector(".pagination");
     paginationContainer.innerHTML = '';
 
-    for (let i = 0; i < totalPages; i++) {
+    for (let i = 0; i < page.totalPages; i++) {
         const pageLink = document.createElement("a");
         pageLink.textContent = i + 1;
-        pageLink.classList.add("pagination-link");
+        pageLink.className = "pagination-link";
+        if (i === page.number) {
+            pageLink.classList.add("active");
+        }
         pageLink.addEventListener('click', (event) => {
             event.preventDefault();
-            loadAll(i, pageable.pageSize, titleFilter);
+            loadAll(i, page.size, titleFilter);
         });
         paginationContainer.appendChild(pageLink);
     }
@@ -112,10 +124,3 @@ document.addEventListener("DOMContentLoaded", () => {
     loadAll(0, 10, titleFilter);
 });
 
-document.getElementById('searchInput').addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        const titleFilter = event.target.value;
-        window.location.href = `../home?titleFilter=${encodeURIComponent(titleFilter)}`;
-    }
-});

@@ -1,4 +1,4 @@
-package com.bookstore.entity;
+package com.bookstore.model.entity;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -7,9 +7,9 @@ import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import com.bookstore.entity.audit.BaseAudit;
-import com.bookstore.entity.audit.BookAudit;
-import com.bookstore.entity.enums.Language;
+import com.bookstore.model.audit.BaseAudit;
+import com.bookstore.model.audit.BookAudit;
+import com.bookstore.model.enums.Language;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -22,6 +22,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -79,16 +80,16 @@ public class Book extends BookAudit{
 	@Exclude
 	private String cover;
 	
-	@ManyToMany(mappedBy = "booksInCart", cascade = {CascadeType.MERGE})
+	@OneToMany(
+			mappedBy = "book", 
+			cascade = CascadeType.MERGE
+	)
 	@Exclude
 	@ToString.Exclude
-	private List<UserEntity> usersInCart;
-	
-	public void addUserToCart(UserEntity user) {
-		usersInCart.add(user);
+	private List<Cart> carts;
+
+	public Book(Long id) {
+		this.id = id;
 	}
-	
-	public void removeUserFromCart(UserEntity user) {
-		usersInCart.remove(user);
-	}
+
 }

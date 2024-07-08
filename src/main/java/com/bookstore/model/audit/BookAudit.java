@@ -1,9 +1,9 @@
-package com.bookstore.entity.audit;
+package com.bookstore.model.audit;
 
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.bookstore.entity.UserEntity;
+import com.bookstore.model.entity.UserEntity;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

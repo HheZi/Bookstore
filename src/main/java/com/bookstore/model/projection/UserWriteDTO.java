@@ -1,9 +1,9 @@
-package com.bookstore.entity.projection;
+package com.bookstore.model.projection;
 
 import org.hibernate.validator.constraints.Length;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bookstore.entity.enums.Role;
+import com.bookstore.model.enums.Role;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Column;

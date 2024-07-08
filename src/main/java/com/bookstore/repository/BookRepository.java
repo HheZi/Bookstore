@@ -13,10 +13,11 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.bookstore.entity.Book;
 import java.util.List;
-import com.bookstore.entity.UserEntity;
-import com.bookstore.entity.projection.UserReadDTO;
+
+import com.bookstore.model.entity.Book;
+import com.bookstore.model.entity.UserEntity;
+import com.bookstore.model.projection.UserReadDTO;
 
 @Repository
 public interface BookRepository extends JpaRepository<Book, Long>{
@@ -25,7 +26,7 @@ public interface BookRepository extends JpaRepository<Book, Long>{
 	@Query("from Book b where b.id = :id")
 	public Optional<Book> findByIdWithCreatedBy(@Param("id") Long id);
 	
-	@EntityGraph(attributePaths = "usersInCart")
+	@EntityGraph(attributePaths = "carts")
 	@Query("from Book b where b.id = :id")
 	public Optional<Book> findByIdWithUsersInCart(@Param("id") Long id);
 	
@@ -44,4 +45,7 @@ public interface BookRepository extends JpaRepository<Book, Long>{
 	
 	@Query(value = "select b.created_by from books b where b.id = :id", nativeQuery = true)
 	public Optional<Integer> findByIdReturningCreatedById(@Param("id") Long id);
+	
+	@Query("from Book b where b.id = :bookId and b.createdBy.id = :userId")
+	public Optional<Book> existsByCreatedBy(@Param("userId") Integer userId, @Param("bookId") Long bookId);
 }

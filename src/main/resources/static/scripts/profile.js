@@ -37,7 +37,7 @@ async function loadUserData(userId) {
         document.getElementById('hrefSeeBooks').href = `../userBooks?user=${user.id}`;
         
         if (userAuth.id !== user.id) {
-            document.querySelectorAll('input').forEach(input => input.disabled = true);
+            document.querySelectorAll('#userForm input').forEach(input => input.disabled = true);
             document.querySelector('button[type="submit"]').style.display = 'none';
 			document.querySelector("#removeAvatar").style.display = 'none'
             document.getElementById('avatarUpload').style.display = 'none';

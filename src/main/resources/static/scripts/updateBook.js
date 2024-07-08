@@ -64,6 +64,10 @@ document.addEventListener("DOMContentLoaded", function() {
 	 	notification.className = `notification ${type}`;
         notification.textContent = message;		
         notification.style.display = 'block';
+        
+        setTimeout(() => {
+        	notification.style.display = 'none';
+    	}, 3000);
 	}
     
 });

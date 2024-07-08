@@ -1,4 +1,4 @@
-package com.bookstore.entity.enums;
+package com.bookstore.model.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 

@@ -1,4 +1,4 @@
-package com.bookstore.entity.audit;
+package com.bookstore.model.audit;
 
 import java.time.Instant;
 

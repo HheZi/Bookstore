@@ -1,10 +1,10 @@
-package com.bookstore.entity.projection;
+package com.bookstore.model.projection;
 
 import java.time.LocalDate;
 
-import com.bookstore.entity.Genre;
-import com.bookstore.entity.UserEntity;
-import com.bookstore.entity.enums.Language;
+import com.bookstore.model.entity.Genre;
+import com.bookstore.model.entity.UserEntity;
+import com.bookstore.model.enums.Language;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreType;
 

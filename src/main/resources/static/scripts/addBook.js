@@ -14,7 +14,7 @@ document.getElementById('formPost').addEventListener('submit', async function(ev
         
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.detail || 'Произошла ошибка');
+            throw new Error(errorData.detail || 'Something went wrong');
         }
         
         message.textContent = 'Successfully created!';

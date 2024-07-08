@@ -9,6 +9,8 @@ import lombok.Getter;
 @Getter
 public class ResponseException extends ResponseStatusException{
 
+	private static final long serialVersionUID = -3181132121125164163L;
+
 	private HttpStatus status; 
 	
 	@Nullable

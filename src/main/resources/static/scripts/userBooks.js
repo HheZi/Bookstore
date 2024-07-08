@@ -24,7 +24,7 @@ async function getBooksByUser() {
         const books = await res.json();
         updateTable(books);
     } catch (error) {
-        showNotification(error.message || 'Ошибка при загрузке книг', 'error');
+        showNotification(error.message || 'Something went wrong', 'error');
     }
 }
 
@@ -47,16 +47,23 @@ function updateTable(books) {
 	        const row = document.createElement("tr");
 			
 			let updateBut = '';
-			let but = `<button id="butt${book.id}">Add to cart</button>`;
+			let but = `<button id="butt${book.id}" onclick="addToCart(${book.id})">Add to cart</button>`;
+			let soldOut = ''
 			if (user == userAuth.id) {
-				but = `<button id="butt${book.id}">Delete</button>`;
+				but = `<button id="butt${book.id}" onclick="deleteBookFromCart(${book.id})">Delete</button>`;
 				updateBut = `<button onClick="location.href='../books/update?book=${book.id}'">Update</button>`
 			}
+			else if(book.quantity === 0){
+				but = '';
+				soldOut = "<div class='sold-out-overlay'>Sold out</div>";
+			}
+			
 			
 	        row.innerHTML = `
 	            <td>
-	                <a href="/books/${book.id}">
+	                <a href="../books/${book.id}">
 	                    <img src="${book.coverUrl}" alt="Cover" class="cover">
+	                    ${soldOut}
 	                </a>
 	            </td>
 	            <td>
@@ -76,18 +83,7 @@ function updateTable(books) {
 	        `;
 	
 	        tbody.appendChild(row);
-	        document.querySelector(`#butt${book.id}`).addEventListener("click", async () => {
-	            if (user == userAuth.id) {
-	                try {
-	                    await makeRequest(`http://localhost:8080/api/books/${book.id}`, "DELETE");
-	                    getBooksByUser();
-	                } catch (error) {
-	                    showNotification(error.message || 'Ошибка при удалении книги', 'error');
-	                }
-	            } else {
-	                addToCart(book.id);
-	            }
-	        });
+
 	    });
     }
     else{
@@ -96,12 +92,26 @@ function updateTable(books) {
     
 }
 
+async function deleteBookFromCart(id){
+	if (user == userAuth.id) {
+		 try {
+		      await makeRequest(`http://localhost:8080/api/books/${id}`, "DELETE");
+		      getBooksByUser();
+		 } catch (error) {
+		      showNotification(error.message || 'Something went wrong', 'error');
+	 	 }
+	 } else {
+	  addToCart(id);
+	 }
+}
+
+
 async function addToCart(id) {
     try {
-        await makeRequest(`http://localhost:8080/api/cart/${id}/${userAuth.id}`, "POST");
+        await makeRequest(`http://localhost:8080/api/cart/${id}`, "POST");
         showNotification("Книга добалена в корзину!", "success")
     } catch (error) {
-        showNotification(error.message || 'Ошибка при добавлении книги в корзину', 'error');
+        showNotification(error.message || 'Something went wrong', 'error');
     }
 }
 

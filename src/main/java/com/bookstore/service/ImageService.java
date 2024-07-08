@@ -39,8 +39,8 @@ public class ImageService {
 	
 	@SneakyThrows
 	@Async
-	public void deleteCover(String pathToimageFolder, String fileName) {
-		if(fileName != null && !fileName.isEmpty())
+	public void deleteImage(String pathToimageFolder, String fileName) {
+		if(!fileName.isEmpty())
 			Files.delete(Path.of(pathToimageFolder, fileName));
 	}
 }

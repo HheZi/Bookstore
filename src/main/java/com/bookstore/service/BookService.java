@@ -17,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.bookstore.entity.Book;
-import com.bookstore.entity.UserEntity;
-import com.bookstore.entity.projection.UserReadDTO;
 import com.bookstore.exception.ResponseException;
+import com.bookstore.model.entity.Book;
+import com.bookstore.model.entity.UserEntity;
+import com.bookstore.model.projection.UserReadDTO;
 import com.bookstore.repository.BookRepository;
 import com.bookstore.security.SecurityUserDetails;
 
@@ -49,9 +49,24 @@ public class BookService {
 				: bookRepository.findByTitleContainingIgnoreCase(filterName, pageable);
 	}
 	
+	@Transactional
+	public void saveAllBooks(List<Book> books) {
+		bookRepository.saveAll(books);
+	}
+	
 	@Transactional(readOnly = true)
 	public Optional<Book> findById(Long id) {
 		return bookRepository.findByIdWithCreatedBy(id);
+	}
+	
+	@Transactional
+	public boolean isBookCreatedByUser(Integer userId, Long bookId) {
+		return bookRepository.existsByCreatedBy(userId, bookId).isPresent();
+	}
+	
+	public boolean isBookSoldOut(long id) {
+		return findById(id)
+				.orElseThrow(() -> new ResponseException(NOT_FOUND, "The book not found")).getQuantity() == 0;
 	}
 	
 	@Transactional(readOnly = true)
@@ -85,16 +100,13 @@ public class BookService {
 	}
 	
 	public void deleteCover(String imageName) {
-		imageService.deleteCover(pathToCovers, imageName);
+		imageService.deleteImage(pathToCovers, imageName);
 	}
 	
 	@Transactional(readOnly = true)
 	public boolean isUserHasAccessToBook(Long id) {
-		UserEntity entity = ((SecurityUserDetails) SecurityContextHolder.getContext()
-				.getAuthentication().getPrincipal()).getUserEntity();
-		
 		return bookRepository.findByIdReturningCreatedById(id)
-				.orElseThrow(() -> new ResponseException(NOT_FOUND, "The book is not found")) == entity.getId();
+				.orElseThrow(() -> new ResponseException(NOT_FOUND, "The book is not found")) == SecurityUserDetails.getAuthUser().getId();
 	}
 	
 	@Transactional

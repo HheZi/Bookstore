@@ -1,11 +1,11 @@
-package com.bookstore.entity;
+package com.bookstore.model.entity;
 
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 
-import com.bookstore.entity.audit.BaseAudit;
-import com.bookstore.entity.enums.Role;
+import com.bookstore.model.audit.BaseAudit;
+import com.bookstore.model.enums.Role;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -18,13 +18,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Builder.Default;
 import lombok.EqualsAndHashCode;
-import lombok.EqualsAndHashCode.Exclude;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -43,7 +43,7 @@ public class UserEntity extends BaseAudit{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Exclude
+	@EqualsAndHashCode.Exclude
 	private Integer id;
 
 	@Column(length = 40)
@@ -56,29 +56,38 @@ public class UserEntity extends BaseAudit{
 	private String password;
 	
 	@Column(length = 64)
-	@Exclude
+	@EqualsAndHashCode.Exclude
 	private String avatar;
 	
 	@Enumerated(EnumType.STRING)
 	@Default
 	private Role role = Role.USER;
 
-	@ManyToMany(cascade = {CascadeType.MERGE})
-	@JoinTable(name = "cart",
-			joinColumns = @JoinColumn(name = "user_id"),
-			inverseJoinColumns = @JoinColumn(name = "book_id"))
-	@Exclude
-	@Setter(AccessLevel.NONE)
+	@OneToMany(
+	        mappedBy = "user",
+	        cascade = CascadeType.MERGE
+	)
+	@EqualsAndHashCode.Exclude
 	@ToString.Exclude
-	private List<Book> booksInCart;
+	private List<Cart> carts;
 	
 	public void addBookToCart(Book book) {
-		booksInCart.add(book);
-		book.addUserToCart(this);
+		Cart transientCart = new Cart(book, this);
+		carts.add(transientCart);
+		book.getCarts().add(transientCart);
 	}
 	
 	public void removeBookFromCart(Book book) {
-		booksInCart.remove(book);
-		book.removeUserFromCart(this);
+		for (Cart cart : carts) {
+			if (cart.getBook().equals(book) && cart.getUser().equals(this)) {
+				cart.getBook().getCarts().remove(cart);
+				cart.setBook(null);
+				cart.setUser(null);
+			}
+		}
+	}
+
+	public UserEntity(Integer userId) {
+		this.id = userId;
 	}
 }

@@ -2,9 +2,9 @@ package com.bookstore.mapper;
 
 import org.springframework.stereotype.Component;
 
-import com.bookstore.entity.UserEntity;
-import com.bookstore.entity.projection.UserReadDTO;
-import com.bookstore.entity.projection.UserWriteDTO;
+import com.bookstore.model.entity.UserEntity;
+import com.bookstore.model.projection.UserReadDTO;
+import com.bookstore.model.projection.UserWriteDTO;
 
 @Component
 public class UserMapper {

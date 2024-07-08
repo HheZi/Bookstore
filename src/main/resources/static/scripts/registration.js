@@ -12,7 +12,7 @@ document.querySelector("#reg").addEventListener("click", async function(event){
 
         if (!response.ok) {
             const errorData = await response.json();
-            throw new Error(errorData.detail || 'Произошла ошибка при регистрации');
+            throw new Error(errorData.detail || 'Something went wrong');
         }
 
         message.className = "success-message";
