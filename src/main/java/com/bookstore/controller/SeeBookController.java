@@ -1,7 +1,6 @@
 package com.bookstore.controller;
 
-import java.util.List;
-
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,14 +14,8 @@ import com.bookstore.service.GenreService;
 @RequestMapping("/books")
 public class SeeBookController {
 	
-	private List<String> genres;
-	
-	public SeeBookController(GenreService genreService) {
-		this.genres = genreService.findAll()
-				.stream()
-				.map(Genre::getName)
-				.toList(); 
-	}
+	@Autowired
+	private GenreService genreService;
 	
 	private Language[] languages = Language.values();
 	
@@ -33,7 +26,10 @@ public class SeeBookController {
 	
 	@GetMapping("/update")
 	public String name(Model model) {
-		model.addAttribute("genres", genres);
+		model.addAttribute("genres", genreService.findAll()
+				.stream()
+				.map(Genre::getName)
+				.toList());
 		model.addAttribute("languages", languages);
 		return "updateBook";
 	}
@@ -41,7 +37,10 @@ public class SeeBookController {
 	
 	@GetMapping("/new")
 	public String newBook(Model model) {
-		model.addAttribute("genres", genres);
+		model.addAttribute("genres", genreService.findAll()
+				.stream()
+				.map(Genre::getName)
+				.toList());
 		model.addAttribute("languages", languages);
 		return "addBook";
 	}

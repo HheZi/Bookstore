@@ -1,9 +1,9 @@
 package com.bookstore.exception;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.lang.Nullable;
 import org.springframework.web.server.ResponseStatusException;
 
-import jakarta.annotation.Nullable;
 import lombok.Getter;
 
 @Getter
