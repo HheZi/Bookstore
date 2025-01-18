@@ -2,18 +2,11 @@ package com.bookstore.model;
 
 import java.util.List;
 
-import org.hibernate.sql.Update;
-
-import com.bookstore.model.entity.Book;
 import com.bookstore.model.entity.Cart;
-import com.bookstore.model.entity.UserEntity;
 import com.bookstore.security.SecurityUserDetails;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 @NoArgsConstructor
 @Getter

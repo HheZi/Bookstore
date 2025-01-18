@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.bookstore.model.entity.Book;
-import com.bookstore.model.entity.Genre;
 import com.bookstore.model.projection.BookReadDTO;
 import com.bookstore.model.projection.BookWriteDTO;
 import com.bookstore.service.GenreService;

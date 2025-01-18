@@ -1,7 +1,6 @@
 package com.bookstore.service;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
-import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 import java.util.List;
 
@@ -15,9 +14,6 @@ import com.bookstore.model.entity.Cart;
 import com.bookstore.model.entity.CartId;
 import com.bookstore.model.entity.UserEntity;
 import com.bookstore.repository.CartRepository;
-
-import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 public class CartService {

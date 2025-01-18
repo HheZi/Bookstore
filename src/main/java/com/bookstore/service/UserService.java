@@ -1,22 +1,17 @@
 package com.bookstore.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.logging.LogLevel;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.bookstore.exception.ResponseException;
 import com.bookstore.model.entity.UserEntity;
@@ -25,7 +20,6 @@ import com.bookstore.repository.UserRepository;
 import com.bookstore.security.SecurityUserDetails;
 
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 public class UserService implements UserDetailsService{
@@ -39,10 +33,10 @@ public class UserService implements UserDetailsService{
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 	
-	@Value("${app.image.avatar.default:/Programming/Java/Bookstore/images/avatars/default.png}")
+	@Value("${app.image.avatar.default}")
 	private String defaultAvatar;
 	
-	@Value("${app.image.avatar.path:/Programming/Java/Bookstore/images/avatars}")
+	@Value("${app.image.avatar.folder}")
 	private String pathToAvatars;
 	
 	@Transactional(readOnly = true)
@@ -76,7 +70,7 @@ public class UserService implements UserDetailsService{
 	}
 	
 	@Transactional(readOnly = true)
-	public byte[] getAvatar(Integer id) {
+	public Resource getAvatar(Integer id) {
 		String avatar = userRepository.getAvatar(id);
 		
 		return imageService.getImage(pathToAvatars, avatar, defaultAvatar);

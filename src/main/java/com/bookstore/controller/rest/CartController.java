@@ -4,48 +4,29 @@ import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
 
-import java.util.Collections;
 import java.util.List;
 
-import org.checkerframework.checker.index.qual.LengthOf;
-import org.checkerframework.checker.units.qual.m;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.bookstore.exception.ResponseException;
-import com.bookstore.mapper.BookMapper;
 import com.bookstore.mapper.CartMapper;
 import com.bookstore.model.Order;
-import com.bookstore.model.entity.Book;
 import com.bookstore.model.entity.Cart;
-import com.bookstore.model.entity.CartId;
-import com.bookstore.model.entity.UserEntity;
 import com.bookstore.model.projection.BookCartReadDTO;
-import com.bookstore.model.projection.BookReadDTO;
 import com.bookstore.security.SecurityUserDetails;
 import com.bookstore.service.CartService;
 import com.bookstore.service.EmailService;
-import com.bookstore.service.UserService;
-
-import lombok.extern.java.Log;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/cart")

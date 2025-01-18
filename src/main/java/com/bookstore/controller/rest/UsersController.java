@@ -5,17 +5,12 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
 
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Role;
+import org.springframework.core.io.Resource;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,23 +19,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.bookstore.exception.ResponseException;
 import com.bookstore.mapper.UserMapper;
-import com.bookstore.model.entity.Book;
 import com.bookstore.model.entity.UserEntity;
 import com.bookstore.model.projection.UserReadDTO;
 import com.bookstore.model.projection.UserWriteDTO;
 import com.bookstore.security.SecurityUserDetails;
-import com.bookstore.service.EmailService;
 import com.bookstore.service.UserService;
-
-import jakarta.annotation.security.PermitAll;
-import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/api/users")
@@ -64,7 +52,7 @@ public class UsersController {
 	}
 
 	@GetMapping("/{id}/avatar")
-	public byte[] getAvatar(@PathVariable("id") Integer id) {
+	public Resource getAvatar(@PathVariable("id") Integer id) {
 		return userService.getAvatar(id);
 	}
 

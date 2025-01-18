@@ -5,8 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import com.bookstore.model.entity.Genre;
 
-import java.util.List;
-
 
 @Repository
 public interface GenreRepository extends JpaRepository<Genre, Integer>{

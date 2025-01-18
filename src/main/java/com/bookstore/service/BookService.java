@@ -2,30 +2,25 @@ package com.bookstore.service;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
-import java.io.InputStream;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 import com.bookstore.exception.ResponseException;
 import com.bookstore.model.entity.Book;
 import com.bookstore.model.entity.UserEntity;
-import com.bookstore.model.projection.UserReadDTO;
 import com.bookstore.repository.BookRepository;
 import com.bookstore.security.SecurityUserDetails;
 
 import lombok.SneakyThrows;
-import lombok.extern.slf4j.Slf4j;
 
 @Service
 public class BookService {
@@ -36,10 +31,10 @@ public class BookService {
 	@Autowired
 	private ImageService imageService;
 	
-	@Value("${app.image.cover.path:/Programming/Java//Bookstore/images/сovers}")
+	@Value("${app.image.cover.folder}")
 	private String pathToCovers;
 	
-	@Value("${app.image.cover.default:/Programming/Java//Bookstore/images/сovers/default.png}")
+	@Value("${app.image.cover.default}")
 	private String defaultCover;
 	
 	@Transactional(readOnly = true)
@@ -80,9 +75,9 @@ public class BookService {
 	}
 	
 	@Transactional(readOnly = true)
-	public byte[] getCover(Long id) {
+	public Resource getCover(Long id) {
 		String image = bookRepository.getCoverById(id);
-				
+		
 		return imageService.getImage(pathToCovers, image, defaultCover);
 	}
 	

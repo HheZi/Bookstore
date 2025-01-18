@@ -2,11 +2,7 @@ package com.bookstore.model.projection;
 
 import java.time.LocalDate;
 
-import com.bookstore.model.entity.Genre;
-import com.bookstore.model.entity.UserEntity;
 import com.bookstore.model.enums.Language;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
 
 import lombok.Builder;
 import lombok.Value;

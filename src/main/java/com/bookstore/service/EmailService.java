@@ -10,7 +10,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.bookstore.model.Order;
-import com.bookstore.model.entity.Book;
 import com.bookstore.model.entity.Cart;
 
 @Service
