@@ -26,12 +26,6 @@ Before starting the project, you need to create a database with the tables shown
 
 After that you need to set a password, login and ulr of your database.
 
-### Image Sevice 
-
-You are also need to specify a full path to /Bookstore/images in [UserService](src/main/java/com/bookstore/service/UserService.java) and [BookService](src/main/java/com/bookstore/service/BookService.java) classes.
-
-It is necessary for saving and reading images.
-
 ### Email Service 
 
 This programm uses smtp server gmail. 
@@ -52,10 +46,10 @@ git clone https://github.com/HheZi/Bookstore
 cd Bookstore
 ```
 
-3. Compile the source code:
+3. Run app:
 
 ```bash
-javac -d bin src/*.java
+./gradlew bootRun
 ```
 
 ## Contributing
