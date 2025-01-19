@@ -46,7 +46,13 @@ git clone https://github.com/HheZi/Bookstore
 cd Bookstore
 ```
 
-3. Run app:
+3. Use docker compose if it is installed on your machine:
+
+```bash
+docker compose up
+```
+
+Or use gradle:
 
 ```bash
 ./gradlew bootRun
